@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import LandingPage from "./pages/Landing";
+import LoginPage from "./pages/Login";
+import UserPage from "./pages/User";
+import "./index.css";
+import { createTheme, ThemeProvider } from "@mui/material";
+import { green } from "@mui/material/colors";
+import SignUpPage from "./pages/SignUp";
+import ParticlesComponent from "./components/particles";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: green[500],
+      secondary: "#ff0000"
+    },
+  },
+});
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  return <>
+    <ParticlesComponent id="particles" style={{zIndex: -1}}/>
+    <ThemeProvider theme={theme}>
+    <Router>
+      <Route path="/" exact>
+        <LandingPage/>
+      </Route>
+      <Route path="/login" exact>
+        <LoginPage/>
+      </Route>
+      <Route path="/signup" exact>
+        <SignUpPage/>
+      </Route>
+      <Route path="/user">
+        <UserPage/>
+      </Route>
+    </Router>
+  </ThemeProvider>
+  </>
 }
 
 export default App;
