@@ -2,7 +2,11 @@ import { Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
 
 export default function SignUpPage(){
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState({
+        settingsFlags: "",
+        settings: {},
+        upcomingEvents: []
+    });
 
     const fields = [
         {
