@@ -1,7 +1,14 @@
 import { Check, Save } from "@mui/icons-material";
-import { Button, Checkbox, LinearProgress, TextField } from "@mui/material";
+import {
+    Button,
+    Checkbox,
+    LinearProgress,
+    TextField,
+    Typography,
+    Box,
+} from "@mui/material";
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import config from "../config";
 
 export default function UserPage() {
@@ -9,7 +16,9 @@ export default function UserPage() {
     const [qrCode, setQrCode] = useState(null);
     const [isInSession, setIsInSession] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const { phoneNum } = useParams();
+    const navigate = useNavigate();
 
     const botSettings = [
         {
@@ -30,30 +39,47 @@ export default function UserPage() {
         },
     ];
 
-    window.onclick = () => console.log(user);
-
     useEffect(() => {
         const fetchUser = async () => {
+            if (!phoneNum) {
+                setError("Phone number is required");
+                setLoading(false);
+                return;
+            }
+
             try {
                 const response = await fetch(
                     `${config.API_BASE_URL}/getUser/${phoneNum}`
                 );
+                if (!response.ok) {
+                    throw new Error("Failed to fetch user data");
+                }
                 const userData = await response.json();
+
+                if (!userData) {
+                    throw new Error("User not found");
+                }
+
                 setUser(userData);
 
-                if (userData) {
-                    const sessionResponse = await fetch(
-                        `${config.API_BASE_URL}/startOrLoadSession/${userData._id}`
-                    );
-                    const sessionData = await sessionResponse.json();
-                    if (sessionData.success) {
-                        if (sessionData.qr) {
-                            setQrCode(sessionData.qr);
-                        }
+                const sessionResponse = await fetch(
+                    `${config.API_BASE_URL}/startOrLoadSession/${userData._id}`
+                );
+                if (!sessionResponse.ok) {
+                    throw new Error("Failed to start session");
+                }
+
+                const sessionData = await sessionResponse.json();
+                if (sessionData.success) {
+                    if (sessionData.qr) {
+                        setQrCode(sessionData.qr);
+                    } else {
+                        setIsInSession(true);
                     }
                 }
             } catch (error) {
                 console.error("Error fetching user:", error);
+                setError(error.message);
             } finally {
                 setLoading(false);
             }
@@ -65,7 +91,7 @@ export default function UserPage() {
     const getSummery = async () => {
         try {
             const response = await fetch(
-                `${config.API_BASE_URL}/clientBotRequest`,
+                `${config.API_BASE_URL}/getWeeklyEvents`,
                 {
                     method: "POST",
                     headers: {
@@ -88,7 +114,6 @@ export default function UserPage() {
 
     const changeSettings = (id) => {
         if (user.settingsFlags?.indexOf(id) === -1) {
-            console.log(user.settingsFlags + id);
             setUser({ ...user, settingsFlags: user.settingsFlags + id });
         } else {
             setUser({
@@ -130,80 +155,84 @@ export default function UserPage() {
         }
     };
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    if (!user) {
-        return <div>User not found</div>;
-    }
-
     return (
-        <div
-            style={{
+        <Box
+            sx={{
                 height: "95vh",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                padding: 10,
+                padding: 2,
             }}
         >
-            <div
-                style={{
-                    flex: 1,
-                    backgroundColor: "#f3f3f3",
-                    borderRadius: 10,
-                    boxShadow: "black 0px 0px 7px 0px",
-                    padding: 10,
-                    display: "flex",
-                    flexDirection: "column",
-                    direction: "rtl",
-                    minWidth: 400,
-                }}
-            >
-                <div
-                    style={{
-                        textAlign: "center",
-                        fontWeight: "bold",
-                        fontSize: 30,
+            {
+                <Box
+                    sx={{
+                        flex: 1,
+                        backgroundColor: "#f3f3f3",
+                        borderRadius: 2,
+                        boxShadow: "0px 0px 7px 0px rgba(0,0,0,0.5)",
+                        padding: 2,
+                        display: "flex",
+                        flexDirection: "column",
+                        direction: "rtl",
+                        minWidth: 400,
                     }}
                 >
-                    {user?.name}
-                </div>
-                <div>
-                    {isInSession ? (
-                        <div style={{ textAlign: "center" }}>
+                    <Typography
+                        variant="h4"
+                        sx={{
+                            textAlign: "center",
+                            fontWeight: "bold",
+                            mb: 2,
+                        }}
+                    >
+                        {user?.name}
+                    </Typography>
+
+                    <Box sx={{ textAlign: "center", mb: 2 }}>
+                        {isInSession ? (
                             <Check
-                                style={{
-                                    marginTop: 20,
+                                sx={{
                                     fontSize: 60,
                                     border: "1px solid black",
                                     borderRadius: "50%",
                                     backgroundColor: "#00A884",
+                                    p: 1,
                                 }}
                             />
-                        </div>
-                    ) : (
-                        <div>
-                            {!qrCode && <LinearProgress />}
-                            <img src={qrCode} alt={""} />
-                        </div>
-                    )}
-                </div>
-                <h3>הגדרות בוט</h3>
-                <div>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                        <div>
-                            <Button
-                                style={{ color: "#f3f3f3" }}
-                                variant="contained"
-                                onClick={getSummery}
-                            >
-                                לקבל עדכון שבועי עכשיו
-                            </Button>
-                        </div>
+                        ) : (
+                            <Box>
+                                {!qrCode && <LinearProgress />}
+                                {qrCode && <img src={qrCode} alt="QR Code" />}
+                            </Box>
+                        )}
+                    </Box>
+
+                    <Typography variant="h6" sx={{ mb: 2 }}>
+                        הגדרות בוט
+                    </Typography>
+
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 2,
+                        }}
+                    >
+                        <Button
+                            variant="contained"
+                            onClick={getSummery}
+                            sx={{ backgroundColor: "#00A884" }}
+                        >
+                            לקבל עדכון שבועי עכשיו
+                        </Button>
+
                         {botSettings.map((item) => (
-                            <div key={item.id}>
+                            <Box
+                                key={item.id}
+                                sx={{ display: "flex", alignItems: "center" }}
+                            >
                                 <Checkbox
                                     checked={
                                         user?.settingsFlags?.includes(
@@ -212,71 +241,56 @@ export default function UserPage() {
                                     }
                                     onChange={() => changeSettings(item.id)}
                                 />
-                                {item.text}
-                            </div>
+                                <Typography>{item.text}</Typography>
+                            </Box>
                         ))}
+
                         {user?.settingsFlags?.includes("4") && (
-                            <div>
-                                <TextField
-                                    value={
-                                        user?.settings
-                                            ?.timeBeforeEventNotification
-                                    }
-                                    onChange={({ target }) => {
-                                        if (user.settings) {
-                                            setUser({
-                                                ...user,
-                                                settings: {
-                                                    timeBeforeEventNotification:
-                                                        target.value,
-                                                },
-                                            });
-                                        } else {
-                                            setUser({
-                                                ...user,
-                                                settings: {
-                                                    ...user.settings,
-                                                    timeBeforeEventNotification:
-                                                        target.value,
-                                                },
-                                            });
-                                        }
-                                    }}
-                                    fullWidth
-                                    type="number"
-                                    label="מספר דקות לפני אירוע לעדכון"
-                                    slotProps={{
-                                        htmlInput: {
-                                            step: 15,
-                                            max: 2500,
-                                            min: 0,
+                            <TextField
+                                value={
+                                    user?.settings
+                                        ?.timeBeforeEventNotification || ""
+                                }
+                                onChange={({ target }) => {
+                                    setUser({
+                                        ...user,
+                                        settings: {
+                                            ...user.settings,
+                                            timeBeforeEventNotification:
+                                                target.value,
                                         },
-                                    }}
-                                />
-                            </div>
+                                    });
+                                }}
+                                fullWidth
+                                type="number"
+                                label="מספר דקות לפני אירוע לעדכון"
+                                inputProps={{
+                                    step: 15,
+                                    max: 2500,
+                                    min: 0,
+                                }}
+                            />
                         )}
-                        <div style={{ marginTop: 10 }}>
-                            <Button
-                                variant="outlined"
-                                onClick={() => connectToGoogleCalandar()}
-                            >
-                                התחבר ל-Google Calandar
-                            </Button>
-                        </div>
-                        <div style={{ marginTop: 10 }}>
-                            <Button
-                                variant="outlined"
-                                endIcon={<Save style={{ marginRight: 10 }} />}
-                                onClick={() => saveSettings()}
-                            >
-                                שמור הגדרות
-                            </Button>
-                        </div>
-                        {/* <TextField multiline maxRows={6} placeholder="פניה חופשית לבוט"/>
-                        <Button style={{marginTop: 10, color: "#f3f3f3"}} variant="contained">שלח פניה</Button> */}
-                    </div>
-                </div>
-            </div>
-        </div>
+
+                        <Button
+                            variant="outlined"
+                            onClick={connectToGoogleCalandar}
+                            sx={{ mt: 2 }}
+                        >
+                            התחבר ל-Google Calandar
+                        </Button>
+
+                        <Button
+                            variant="outlined"
+                            endIcon={<Save sx={{ marginRight: 1 }} />}
+                            onClick={saveSettings}
+                            sx={{ mt: 2 }}
+                        >
+                            שמור הגדרות
+                        </Button>
+                    </Box>
+                </Box>
+            }
+        </Box>
     );
 }
