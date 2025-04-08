@@ -8,17 +8,14 @@ import {
     Box,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import config from "../config";
 
 export default function UserPage() {
     const [user, setUser] = useState(null);
     const [qrCode, setQrCode] = useState(null);
     const [isInSession, setIsInSession] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const { phoneNum } = useParams();
-    const navigate = useNavigate();
 
     const botSettings = [
         {
@@ -42,8 +39,6 @@ export default function UserPage() {
     useEffect(() => {
         const fetchUser = async () => {
             if (!phoneNum) {
-                setError("Phone number is required");
-                setLoading(false);
                 return;
             }
 
@@ -79,9 +74,7 @@ export default function UserPage() {
                 }
             } catch (error) {
                 console.error("Error fetching user:", error);
-                setError(error.message);
             } finally {
-                setLoading(false);
             }
         };
 
