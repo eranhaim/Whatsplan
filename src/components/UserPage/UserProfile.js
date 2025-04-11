@@ -14,6 +14,7 @@ export default function UserProfile({
     isInSession,
     qrCode,
     onGetSummary,
+    loadingWeeklyUpdate,
 }) {
     const { translations } = useLanguage();
 
@@ -89,22 +90,39 @@ export default function UserProfile({
                     )}
                 </Box>
 
-                <Button
-                    variant="contained"
-                    onClick={onGetSummary}
-                    sx={{
-                        bgcolor: "#128C7E",
-                        color: "white",
-                        "&:hover": {
-                            bgcolor: "#00A884",
-                        },
-                        width: "100%",
-                        py: 1.5,
-                        borderRadius: "50px",
-                    }}
-                >
-                    {translations.getWeeklyUpdate}
-                </Button>
+                <Box sx={{ width: "100%" }}>
+                    {loadingWeeklyUpdate && (
+                        <LinearProgress
+                            sx={{
+                                mb: 2,
+                                "& .MuiLinearProgress-bar": {
+                                    backgroundColor: "#128C7E",
+                                },
+                            }}
+                        />
+                    )}
+                    <Button
+                        variant="contained"
+                        onClick={onGetSummary}
+                        disabled={loadingWeeklyUpdate}
+                        sx={{
+                            bgcolor: "#128C7E",
+                            color: "white",
+                            "&:hover": {
+                                bgcolor: "#00A884",
+                            },
+                            "&:disabled": {
+                                bgcolor: "#cccccc",
+                                color: "#666666",
+                            },
+                            width: "100%",
+                            py: 1.5,
+                            borderRadius: "50px",
+                        }}
+                    >
+                        {translations.getWeeklyUpdate}
+                    </Button>
+                </Box>
             </CardContent>
         </Card>
     );

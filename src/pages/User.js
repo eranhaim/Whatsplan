@@ -21,6 +21,7 @@ export default function UserPage() {
     const [scheduleMessage, setScheduleMessage] = useState("");
     const [contacts, setContacts] = useState([]);
     const [loadingContacts, setLoadingContacts] = useState(false);
+    const [loadingWeeklyUpdate, setLoadingWeeklyUpdate] = useState(false);
     const { showSnackbar } = useSnackbar();
 
     const botSettings = [
@@ -117,6 +118,7 @@ export default function UserPage() {
     }, [user?._id]);
 
     const getSummery = async () => {
+        setLoadingWeeklyUpdate(true);
         try {
             const response = await fetch(
                 `${config.API_BASE_URL}/getWeeklyEvents`,
@@ -133,10 +135,21 @@ export default function UserPage() {
             );
             const data = await response.json();
             if (data.success) {
-                // Handle success
+                showSnackbar(
+                    translations.weeklyUpdateSuccess ||
+                        "Weekly update retrieved successfully",
+                    "success"
+                );
             }
         } catch (error) {
             console.error("Error making bot request:", error);
+            showSnackbar(
+                translations.weeklyUpdateError ||
+                    "Error retrieving weekly update",
+                "error"
+            );
+        } finally {
+            setLoadingWeeklyUpdate(false);
         }
     };
 
@@ -312,6 +325,7 @@ export default function UserPage() {
                             isInSession={isInSession}
                             qrCode={qrCode}
                             onGetSummary={getSummery}
+                            loadingWeeklyUpdate={loadingWeeklyUpdate}
                         />
                     </Grid>
 

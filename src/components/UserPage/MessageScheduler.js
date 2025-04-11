@@ -33,7 +33,6 @@ import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { useLanguage } from "../../contexts/LanguageContext";
 import moment from "moment";
 import { useState } from "react";
-import { Delete } from "@mui/icons-material";
 import ScheduledMessagesDialog from "./ScheduledMessagesDialog";
 
 export default function MessageScheduler({

@@ -63,7 +63,7 @@ export default function ScheduledMessagesDialog({
                                     <IconButton
                                         edge="end"
                                         onClick={() =>
-                                            onDeleteMessage(message._id)
+                                            onDeleteMessage(message.id)
                                         }
                                         sx={{ color: "#128C7E" }}
                                     >
