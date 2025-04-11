@@ -3,11 +3,13 @@ import { Button, TextField } from "@mui/material";
 import GoogleAuthDialog from "../components/googleAuthDialog";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function LoginPage() {
     const [showGoogleAuth, setShowGoogleAuth] = useState(false);
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
+    const { translations, language } = useLanguage();
 
     // const login = () => {
     //     fetch("http://localhost:100/login", {
@@ -41,11 +43,11 @@ export default function LoginPage() {
                     navigate(`/user/${data.user.phoneNum}`);
                 }
             } else {
-                alert("Invalid credentials");
+                alert(translations.auth.invalidCredentials);
             }
         } catch (error) {
             console.error("Login failed:", error);
-            alert("Login failed. Please try again.");
+            alert(translations.auth.loginFailed);
         }
     };
 
@@ -69,12 +71,13 @@ export default function LoginPage() {
                         display: "flex",
                         flexDirection: "column",
                         gap: 5,
+                        direction: language === "he" ? "rtl" : "ltr",
                     }}
                 >
                     <div className="landing">WhatsPlan</div>
                     <TextField
                         variant="filled"
-                        label="Phone Number"
+                        label={translations.login.phoneNumber}
                         onChange={({ target }) =>
                             setUser({ ...user, phoneNum: target.value })
                         }
@@ -82,7 +85,7 @@ export default function LoginPage() {
                     />
                     <TextField
                         variant="filled"
-                        label="Password"
+                        label={translations.login.password}
                         type="password"
                         onChange={({ target }) =>
                             setUser({ ...user, password: target.value })
@@ -94,7 +97,7 @@ export default function LoginPage() {
                         style={{ color: "#f3f3f3" }}
                         onClick={() => handleLogin(user)}
                     >
-                        Sign in
+                        {translations.login.signIn}
                     </Button>
                 </div>
             </div>

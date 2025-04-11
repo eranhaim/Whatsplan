@@ -10,6 +10,8 @@ import SignUpPage from "./pages/SignUp";
 import ParticlesComponent from "./components/particles";
 import AuthSuccess from "./pages/AuthSuccess";
 import AuthError from "./pages/AuthError";
+import { LanguageProvider } from "./contexts/LanguageContext";
+import LanguageSwitcher from "./components/LanguageSwitcher";
 
 const theme = createTheme({
     palette: {
@@ -22,10 +24,11 @@ const theme = createTheme({
 
 function App() {
     return (
-        <>
+        <LanguageProvider>
             <ParticlesComponent id="particles" style={{ zIndex: -1 }} />
             <ThemeProvider theme={theme}>
                 <Router>
+                    <LanguageSwitcher />
                     <Routes>
                         <Route path="/" element={<LandingPage />} />
                         <Route path="/login" element={<LoginPage />} />
@@ -36,7 +39,7 @@ function App() {
                     </Routes>
                 </Router>
             </ThemeProvider>
-        </>
+        </LanguageProvider>
     );
 }
 

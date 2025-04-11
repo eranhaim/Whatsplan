@@ -10,29 +10,31 @@ import {
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import config from "../config";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function UserPage() {
     const [user, setUser] = useState(null);
     const [qrCode, setQrCode] = useState(null);
     const [isInSession, setIsInSession] = useState(false);
     const { phoneNum } = useParams();
+    const { translations, language } = useLanguage();
 
     const botSettings = [
         {
             id: "1",
-            text: "לקבל סיכום שבועי בראשון",
+            text: translations.weeklySummary,
         },
         {
             id: "2",
-            text: "לקבל עדכון יומי בבוקר כל יום",
+            text: translations.dailyUpdate,
         },
         {
             id: "3",
-            text: "לקבוע אירועים ביומן Google Calandar",
+            text: translations.googleCalendar,
         },
         {
             id: "4",
-            text: "לקבל עדכונים לפני אירועים",
+            text: translations.eventNotifications,
         },
     ];
 
@@ -134,10 +136,10 @@ export default function UserPage() {
         }
     };
 
-    const connectToGoogleCalandar = async () => {
+    const connectToGoogleCalendar = async () => {
         try {
             const response = await fetch(
-                `${config.API_BASE_URL}/initiateGoogleAuth`
+                `${config.API_BASE_URL}/initiateGoogleAuth?userID=${user._id}`
             );
             const data = await response.json();
             if (data.authUrl) {
@@ -168,7 +170,7 @@ export default function UserPage() {
                         padding: 2,
                         display: "flex",
                         flexDirection: "column",
-                        direction: "rtl",
+                        direction: language === "he" ? "rtl" : "ltr",
                         minWidth: 400,
                     }}
                 >
@@ -203,7 +205,7 @@ export default function UserPage() {
                     </Box>
 
                     <Typography variant="h6" sx={{ mb: 2 }}>
-                        הגדרות בוט
+                        {translations.botSettings}
                     </Typography>
 
                     <Box
@@ -218,7 +220,7 @@ export default function UserPage() {
                             onClick={getSummery}
                             sx={{ backgroundColor: "#00A884" }}
                         >
-                            לקבל עדכון שבועי עכשיו
+                            {translations.getWeeklyUpdate}
                         </Button>
 
                         {botSettings.map((item) => (
@@ -256,7 +258,7 @@ export default function UserPage() {
                                 }}
                                 fullWidth
                                 type="number"
-                                label="מספר דקות לפני אירוע לעדכון"
+                                label={translations.minutesBeforeEvent}
                                 inputProps={{
                                     step: 15,
                                     max: 2500,
@@ -267,10 +269,10 @@ export default function UserPage() {
 
                         <Button
                             variant="outlined"
-                            onClick={connectToGoogleCalandar}
+                            onClick={connectToGoogleCalendar}
                             sx={{ mt: 2 }}
                         >
-                            התחבר ל-Google Calandar
+                            {translations.connectGoogleCalendar}
                         </Button>
 
                         <Button
@@ -279,7 +281,7 @@ export default function UserPage() {
                             onClick={saveSettings}
                             sx={{ mt: 2 }}
                         >
-                            שמור הגדרות
+                            {translations.saveSettings}
                         </Button>
                     </Box>
                 </Box>
