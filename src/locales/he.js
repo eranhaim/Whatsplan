@@ -25,6 +25,17 @@ export default {
     connectGoogleCalendar: "התחבר ל-Google Calendar",
     saveSettings: "שמור הגדרות",
 
+    // Scheduled Messages
+    scheduleMessage: "תזמן הודעה",
+    selectContacts: "בחר אנשי קשר",
+    scheduleDateTime: "בחר תאריך ושעה",
+    message: "הודעה",
+    participants: "משתתפים",
+    once: "פעם אחת",
+    daily: "יומי",
+    weekly: "שבועי",
+    monthly: "חודשי",
+
     // Auth Pages
     authSuccess: "החיבור ל-Google Calendar הצליח!",
     redirecting: "מעביר אותך חזרה לאפליקציה...",

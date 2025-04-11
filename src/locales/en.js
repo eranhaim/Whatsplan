@@ -25,6 +25,17 @@ export default {
     connectGoogleCalendar: "Connect to Google Calendar",
     saveSettings: "Save Settings",
 
+    // Scheduled Messages
+    scheduleMessage: "Schedule Message",
+    selectContacts: "Select Contacts",
+    scheduleDateTime: "Schedule Date & Time",
+    message: "Message",
+    participants: "participants",
+    once: "Once",
+    daily: "Daily",
+    weekly: "Weekly",
+    monthly: "Monthly",
+
     // Auth Pages
     authSuccess: "Successfully connected to Google Calendar!",
     redirecting: "Redirecting you back to the app...",

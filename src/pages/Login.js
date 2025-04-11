@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Button, TextField } from "@mui/material";
+import {
+    Button,
+    TextField,
+    Box,
+    Typography,
+    Paper,
+    Container,
+} from "@mui/material";
 import GoogleAuthDialog from "../components/googleAuthDialog";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
@@ -10,21 +17,6 @@ export default function LoginPage() {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
     const { translations, language } = useLanguage();
-
-    // const login = () => {
-    //     fetch("http://localhost:100/login", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify(user),
-    //     })
-    //         .then((res) => res.json())
-    //         .then((res) => {
-    //             if (res.success) window.location.href = `/user/${phoneNum}`;
-    //             else alert("details didnt match");
-    //         });
-    // };
 
     const handleLogin = async (credentials) => {
         try {
@@ -43,15 +35,16 @@ export default function LoginPage() {
                     navigate(`/user/${data.user.phoneNum}`);
                 }
             } else {
-                alert(translations.auth.invalidCredentials);
+                alert(
+                    translations.auth?.invalidCredentials ||
+                        "Invalid credentials"
+                );
             }
         } catch (error) {
             console.error("Login failed:", error);
-            alert(translations.auth.loginFailed);
+            alert(translations.auth?.loginFailed || "Login failed");
         }
     };
-
-    // components/Login.jsx
 
     return (
         <>
@@ -63,44 +56,120 @@ export default function LoginPage() {
                 }}
                 user={user}
             />
-            <div style={{ display: "flex", justifyContent: "center" }}>
-                <div
-                    style={{
-                        flex: 1,
-                        maxWidth: "500px",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 5,
-                        direction: language === "he" ? "rtl" : "ltr",
-                    }}
-                >
-                    <div className="landing">WhatsPlan</div>
-                    <TextField
-                        variant="filled"
-                        label={translations.login.phoneNumber}
-                        onChange={({ target }) =>
-                            setUser({ ...user, phoneNum: target.value })
-                        }
-                        value={user?.phoneNum}
-                    />
-                    <TextField
-                        variant="filled"
-                        label={translations.login.password}
-                        type="password"
-                        onChange={({ target }) =>
-                            setUser({ ...user, password: target.value })
-                        }
-                        value={user?.password}
-                    />
-                    <Button
-                        variant="contained"
-                        style={{ color: "#f3f3f3" }}
-                        onClick={() => handleLogin(user)}
+            <Box
+                sx={{
+                    minHeight: "100vh",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background:
+                        "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+                    py: 4,
+                }}
+            >
+                <Container maxWidth="sm">
+                    <Paper
+                        elevation={3}
+                        sx={{
+                            p: 4,
+                            borderRadius: 2,
+                            background: "white",
+                            boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
+                            transform: "translateY(0)",
+                            transition: "transform 0.3s ease-in-out",
+                            "&:hover": {
+                                transform: "translateY(-5px)",
+                            },
+                        }}
                     >
-                        {translations.login.signIn}
-                    </Button>
-                </div>
-            </div>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                mb: 4,
+                            }}
+                        >
+                            <Typography
+                                variant="h4"
+                                component="h1"
+                                sx={{
+                                    fontWeight: "bold",
+                                    color: "#128C7E",
+                                    mb: 2,
+                                }}
+                            >
+                                WhatsPlan
+                            </Typography>
+                        </Box>
+
+                        <Box
+                            component="form"
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 3,
+                            }}
+                        >
+                            <TextField
+                                variant="outlined"
+                                label={
+                                    translations.login?.phoneNumber ||
+                                    "Phone Number"
+                                }
+                                onChange={({ target }) =>
+                                    setUser({ ...user, phoneNum: target.value })
+                                }
+                                value={user?.phoneNum || ""}
+                                fullWidth
+                                sx={{
+                                    "& .MuiOutlinedInput-root": {
+                                        "&:hover fieldset": {
+                                            borderColor: "#128C7E",
+                                        },
+                                    },
+                                }}
+                            />
+                            <TextField
+                                variant="outlined"
+                                label={
+                                    translations.login?.password || "Password"
+                                }
+                                type="password"
+                                onChange={({ target }) =>
+                                    setUser({ ...user, password: target.value })
+                                }
+                                value={user?.password || ""}
+                                fullWidth
+                                sx={{
+                                    "& .MuiOutlinedInput-root": {
+                                        "&:hover fieldset": {
+                                            borderColor: "#128C7E",
+                                        },
+                                    },
+                                }}
+                            />
+                            <Button
+                                variant="contained"
+                                onClick={() => handleLogin(user)}
+                                sx={{
+                                    bgcolor: "#128C7E",
+                                    "&:hover": {
+                                        bgcolor: "#00A884",
+                                    },
+                                    py: 1.5,
+                                    fontSize: "1.1rem",
+                                    borderRadius: "50px",
+                                    textTransform: "none",
+                                    mt: 2,
+                                }}
+                            >
+                                {translations.login?.signIn || "Sign In"}
+                            </Button>
+                        </Box>
+                    </Paper>
+                </Container>
+            </Box>
         </>
     );
 }
