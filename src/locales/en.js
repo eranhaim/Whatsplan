@@ -1,4 +1,4 @@
-export default {
+const en = {
     // Common
     signIn: "Sign In",
     signUp: "Sign Up",
@@ -70,3 +70,5 @@ export default {
     description: "The app that organizes your life through WhatsApp",
     getStarted: "Get Started",
 };
+
+export default en;

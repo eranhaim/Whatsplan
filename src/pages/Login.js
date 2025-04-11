@@ -16,7 +16,7 @@ export default function LoginPage() {
     const [showGoogleAuth, setShowGoogleAuth] = useState(false);
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
-    const { translations, language } = useLanguage();
+    const { translations } = useLanguage();
 
     const handleLogin = async (credentials) => {
         try {

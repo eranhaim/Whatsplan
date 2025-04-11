@@ -1,6 +1,6 @@
-export default {
+const es = {
     // Common
-    signIn: "Iniciar sesión",
+    signIn: "Iniciar Sesión",
     signUp: "Registrarse",
     save: "Guardar",
     cancel: "Cancelar",
@@ -9,36 +9,36 @@ export default {
     loading: "Cargando...",
 
     // Login Page
-    phoneNumber: "Número de teléfono",
+    phoneNumber: "Número de Teléfono",
     password: "Contraseña",
     invalidCredentials: "Credenciales inválidas",
-    loginFailed: "Error al iniciar sesión. Por favor, intente de nuevo.",
+    loginFailed: "Error al iniciar sesión. Por favor, intente nuevamente.",
 
     // Signup Page
     name: "Nombre",
-    email: "Correo electrónico",
-    govID: "ID de gobierno",
+    email: "Correo Electrónico",
+    govID: "ID Gubernamental",
     nationality: "Nacionalidad",
     userExists: "El usuario ya existe",
     signupFailed: "Error al registrarse",
 
     // User Page
-    botSettings: "Configuración del bot",
+    botSettings: "Configuración del Bot",
     getWeeklyUpdate: "Obtener actualización semanal ahora",
-    weeklySummary: "Recibir resumen semanal los domingos",
+    weeklySummary: "Obtener resumen semanal el domingo",
     dailyUpdate: "Recibir actualización diaria cada mañana",
     googleCalendar: "Programar eventos en Google Calendar",
     eventNotifications: "Recibir notificaciones antes de eventos",
     minutesBeforeEvent: "Minutos antes del evento para notificación",
     connectGoogleCalendar: "Conectar con Google Calendar",
-    saveSettings: "Guardar configuración",
+    saveSettings: "Guardar Configuración",
 
     // Schedule Message
-    scheduleMessage: "Programar mensaje",
-    selectContacts: "Seleccionar contactos",
-    scheduleDateTime: "Fecha y hora",
+    scheduleMessage: "Programar Mensaje",
+    selectContacts: "Seleccionar Contactos",
+    scheduleDateTime: "Fecha y Hora",
     message: "Mensaje",
-    participants: "Participantes",
+    participants: "participantes",
     once: "Una vez",
     daily: "Diario",
     weekly: "Semanal",
@@ -46,28 +46,30 @@ export default {
     loadingContacts: "Cargando contactos...",
     noContacts: "No hay contactos disponibles",
     messageScheduled: "Mensaje programado exitosamente",
-    scheduleError: "Error al programar el mensaje",
+    scheduleError: "Error al programar mensaje",
 
     // Scheduled Messages Dialog
-    viewScheduledMessages: "Ver mensajes programados",
-    scheduledMessages: "Mensajes programados",
+    viewScheduledMessages: "Ver Mensajes Programados",
+    scheduledMessages: "Mensajes Programados",
     noScheduledMessages: "No hay mensajes programados",
     contacts: "Contactos",
     frequency: "Frecuencia",
     close: "Cerrar",
     messageDeleted: "Mensaje eliminado exitosamente",
-    deleteError: "Error al eliminar el mensaje",
+    deleteError: "Error al eliminar mensaje",
 
     // Auth Pages
-    authSuccess: "¡Conexión exitosa con Google Calendar!",
-    redirecting: "Redirigiendo de vuelta a la aplicación...",
+    authSuccess: "¡Conectado exitosamente con Google Calendar!",
+    redirecting: "Redirigiendo a la aplicación...",
     authError: "Error al conectar con Google Calendar",
     tryAgainLater:
-        "Puedes intentarlo más tarde desde la configuración de tu cuenta",
-    returnToDashboard: "Volver al panel de control",
+        "Puede intentarlo más tarde desde la configuración de su cuenta",
+    returnToDashboard: "Volver al Panel de Control",
 
     // Landing Page
     welcome: "Bienvenido a WhatsPlan",
     description: "La aplicación que organiza tu vida a través de WhatsApp",
     getStarted: "Comenzar",
 };
+
+export default es;

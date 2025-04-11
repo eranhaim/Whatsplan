@@ -1,11 +1,11 @@
-export default {
+const ru = {
     // Common
     signIn: "Войти",
     signUp: "Регистрация",
     save: "Сохранить",
     cancel: "Отмена",
     error: "Ошибка",
-    success: "Успешно",
+    success: "Успех",
     loading: "Загрузка...",
 
     // Login Page
@@ -17,20 +17,20 @@ export default {
     // Signup Page
     name: "Имя",
     email: "Электронная почта",
-    govID: "Удостоверение личности",
-    nationality: "Гражданство",
+    govID: "Государственный ID",
+    nationality: "Национальность",
     userExists: "Пользователь уже существует",
     signupFailed: "Ошибка регистрации",
 
     // User Page
     botSettings: "Настройки бота",
     getWeeklyUpdate: "Получить еженедельное обновление сейчас",
-    weeklySummary: "Получать еженедельный отчет по воскресеньям",
+    weeklySummary: "Получать еженедельный обзор по воскресеньям",
     dailyUpdate: "Получать ежедневное обновление каждое утро",
     googleCalendar: "Планировать события в Google Calendar",
     eventNotifications: "Получать уведомления перед событиями",
     minutesBeforeEvent: "Минут до события для уведомления",
-    connectGoogleCalendar: "Подключиться к Google Calendar",
+    connectGoogleCalendar: "Подключить Google Calendar",
     saveSettings: "Сохранить настройки",
 
     // Schedule Message
@@ -38,7 +38,7 @@ export default {
     selectContacts: "Выбрать контакты",
     scheduleDateTime: "Дата и время",
     message: "Сообщение",
-    participants: "Участники",
+    participants: "участников",
     once: "Один раз",
     daily: "Ежедневно",
     weekly: "Еженедельно",
@@ -53,20 +53,22 @@ export default {
     scheduledMessages: "Запланированные сообщения",
     noScheduledMessages: "Нет запланированных сообщений",
     contacts: "Контакты",
-    frequency: "Периодичность",
+    frequency: "Частота",
     close: "Закрыть",
     messageDeleted: "Сообщение успешно удалено",
     deleteError: "Ошибка при удалении сообщения",
 
     // Auth Pages
-    authSuccess: "Успешное подключение к Google Calendar!",
+    authSuccess: "Успешно подключено к Google Calendar!",
     redirecting: "Перенаправление обратно в приложение...",
     authError: "Ошибка подключения к Google Calendar",
     tryAgainLater: "Вы можете попробовать позже в настройках аккаунта",
-    returnToDashboard: "Вернуться на панель управления",
+    returnToDashboard: "Вернуться в панель управления",
 
     // Landing Page
     welcome: "Добро пожаловать в WhatsPlan",
     description: "Приложение, которое организует вашу жизнь через WhatsApp",
     getStarted: "Начать",
 };
+
+export default ru;

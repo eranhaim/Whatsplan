@@ -1,4 +1,4 @@
-export default {
+const he = {
     // Common
     signIn: "התחברות",
     signUp: "הרשמה",
@@ -11,32 +11,32 @@ export default {
     // Login Page
     phoneNumber: "מספר טלפון",
     password: "סיסמה",
-    invalidCredentials: "פרטי התחברות שגויים",
+    invalidCredentials: "פרטי התחברות לא תקינים",
     loginFailed: "ההתחברות נכשלה. אנא נסה שוב.",
 
     // Signup Page
     name: "שם",
-    email: "דואר אלקטרוני",
+    email: "אימייל",
     govID: "תעודת זהות",
-    nationality: "אזרחות",
-    userExists: "המשתמש כבר קיים",
+    nationality: "לאום",
+    userExists: "משתמש כבר קיים",
     signupFailed: "ההרשמה נכשלה",
 
     // User Page
     botSettings: "הגדרות בוט",
     getWeeklyUpdate: "לקבל עדכון שבועי עכשיו",
-    weeklySummary: "לקבל סיכום שבועי בראשון",
+    weeklySummary: "לקבל סיכום שבועי ביום ראשון",
     dailyUpdate: "לקבל עדכון יומי בבוקר כל יום",
-    googleCalendar: "לקבוע אירועים ביומן Google Calendar",
-    eventNotifications: "לקבל עדכונים לפני אירועים",
-    minutesBeforeEvent: "מספר דקות לפני אירוע לעדכון",
+    googleCalendar: "לתזמן אירועים ב-Google Calendar",
+    eventNotifications: "לקבל התראות לפני אירועים",
+    minutesBeforeEvent: "דקות לפני האירוע להתראה",
     connectGoogleCalendar: "התחבר ל-Google Calendar",
     saveSettings: "שמור הגדרות",
 
     // Schedule Message
     scheduleMessage: "תזמן הודעה",
     selectContacts: "בחר אנשי קשר",
-    scheduleDateTime: "בחר תאריך ושעה",
+    scheduleDateTime: "תאריך ושעה",
     message: "הודעה",
     participants: "משתתפים",
     once: "פעם אחת",
@@ -59,14 +59,16 @@ export default {
     deleteError: "שגיאה במחיקת ההודעה",
 
     // Auth Pages
-    authSuccess: "החיבור ל-Google Calendar הצליח!",
-    redirecting: "מעביר אותך חזרה לאפליקציה...",
-    authError: "החיבור ל-Google Calendar נכשל",
+    authSuccess: "התחברת בהצלחה ל-Google Calendar!",
+    redirecting: "מפנה חזרה לאפליקציה...",
+    authError: "שגיאה בהתחברות ל-Google Calendar",
     tryAgainLater: "תוכל לנסות שוב מאוחר יותר מהגדרות החשבון שלך",
-    returnToDashboard: "חזרה לדשבורד",
+    returnToDashboard: "חזור ללוח הבקרה",
 
     // Landing Page
     welcome: "ברוכים הבאים ל-WhatsPlan",
     description: "האפליקציה שמארגנת את החיים שלך דרך WhatsApp",
-    getStarted: "התחל עכשיו",
+    getStarted: "התחל",
 };
+
+export default he;
