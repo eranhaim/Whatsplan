@@ -48,6 +48,16 @@ export default {
     messageScheduled: "Message scheduled successfully",
     scheduleError: "Error scheduling message",
 
+    // Scheduled Messages Dialog
+    viewScheduledMessages: "View Scheduled Messages",
+    scheduledMessages: "Scheduled Messages",
+    noScheduledMessages: "No scheduled messages",
+    contacts: "Contacts",
+    frequency: "Frequency",
+    close: "Close",
+    messageDeleted: "Message deleted successfully",
+    deleteError: "Error deleting message",
+
     // Auth Pages
     authSuccess: "Successfully connected with Google Calendar!",
     redirecting: "Redirecting back to application...",

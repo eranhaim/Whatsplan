@@ -34,10 +34,11 @@ export default {
     saveSettings: "Guardar configuración",
 
     // Schedule Message
-    scheduleMessage: "Programar Mensaje",
-    selectContacts: "Seleccionar Contactos",
-    scheduleDateTime: "Fecha y Hora Programada",
+    scheduleMessage: "Programar mensaje",
+    selectContacts: "Seleccionar contactos",
+    scheduleDateTime: "Fecha y hora",
     message: "Mensaje",
+    participants: "Participantes",
     once: "Una vez",
     daily: "Diario",
     weekly: "Semanal",
@@ -46,6 +47,16 @@ export default {
     noContacts: "No hay contactos disponibles",
     messageScheduled: "Mensaje programado exitosamente",
     scheduleError: "Error al programar el mensaje",
+
+    // Scheduled Messages Dialog
+    viewScheduledMessages: "Ver mensajes programados",
+    scheduledMessages: "Mensajes programados",
+    noScheduledMessages: "No hay mensajes programados",
+    contacts: "Contactos",
+    frequency: "Frecuencia",
+    close: "Cerrar",
+    messageDeleted: "Mensaje eliminado exitosamente",
+    deleteError: "Error al eliminar el mensaje",
 
     // Auth Pages
     authSuccess: "¡Conexión exitosa con Google Calendar!",

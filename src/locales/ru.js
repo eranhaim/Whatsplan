@@ -36,8 +36,9 @@ export default {
     // Schedule Message
     scheduleMessage: "Запланировать сообщение",
     selectContacts: "Выбрать контакты",
-    scheduleDateTime: "Дата и время отправки",
+    scheduleDateTime: "Дата и время",
     message: "Сообщение",
+    participants: "Участники",
     once: "Один раз",
     daily: "Ежедневно",
     weekly: "Еженедельно",
@@ -45,7 +46,17 @@ export default {
     loadingContacts: "Загрузка контактов...",
     noContacts: "Нет доступных контактов",
     messageScheduled: "Сообщение успешно запланировано",
-    scheduleError: "Ошибка планирования сообщения",
+    scheduleError: "Ошибка при планировании сообщения",
+
+    // Scheduled Messages Dialog
+    viewScheduledMessages: "Просмотр запланированных сообщений",
+    scheduledMessages: "Запланированные сообщения",
+    noScheduledMessages: "Нет запланированных сообщений",
+    contacts: "Контакты",
+    frequency: "Периодичность",
+    close: "Закрыть",
+    messageDeleted: "Сообщение успешно удалено",
+    deleteError: "Ошибка при удалении сообщения",
 
     // Auth Pages
     authSuccess: "Успешное подключение к Google Calendar!",

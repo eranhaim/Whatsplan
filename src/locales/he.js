@@ -48,6 +48,16 @@ export default {
     messageScheduled: "ההודעה תוזמנה בהצלחה",
     scheduleError: "שגיאה בתזמון ההודעה",
 
+    // Scheduled Messages Dialog
+    viewScheduledMessages: "צפה בהודעות מתוזמנות",
+    scheduledMessages: "הודעות מתוזמנות",
+    noScheduledMessages: "אין הודעות מתוזמנות",
+    contacts: "אנשי קשר",
+    frequency: "תדירות",
+    close: "סגור",
+    messageDeleted: "ההודעה נמחקה בהצלחה",
+    deleteError: "שגיאה במחיקת ההודעה",
+
     // Auth Pages
     authSuccess: "החיבור ל-Google Calendar הצליח!",
     redirecting: "מעביר אותך חזרה לאפליקציה...",

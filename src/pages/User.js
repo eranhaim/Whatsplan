@@ -1,63 +1,27 @@
-import {
-    Check,
-    Save,
-    Settings,
-    CalendarToday,
-    Notifications,
-    Update,
-    Schedule,
-    Person,
-    Group,
-} from "@mui/icons-material";
-import {
-    Button,
-    Checkbox,
-    LinearProgress,
-    TextField,
-    Typography,
-    Box,
-    Paper,
-    Container,
-    Grid,
-    Card,
-    CardContent,
-    CardHeader,
-    Divider,
-    IconButton,
-    Tooltip,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel,
-    Avatar,
-    ListItemAvatar,
-    ListItemText,
-    Chip,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
-    CircularProgress,
-} from "@mui/material";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
+import { Update, CalendarToday, Notifications } from "@mui/icons-material";
+import { Box, Container, Grid } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import config from "../config";
 import { useLanguage } from "../contexts/LanguageContext";
-import moment from "moment";
+import UserProfile from "../components/UserPage/UserProfile";
+import MessageScheduler from "../components/UserPage/MessageScheduler";
+import BotSettings from "../components/UserPage/BotSettings";
+import { useSnackbar } from "../contexts/SnackbarContext";
 
 export default function UserPage() {
     const [user, setUser] = useState(null);
     const [qrCode, setQrCode] = useState(null);
     const [isInSession, setIsInSession] = useState(false);
     const { phoneNum } = useParams();
-    const { translations, language } = useLanguage();
+    const { translations } = useLanguage();
     const [selectedContacts, setSelectedContacts] = useState([]);
     const [scheduleDate, setScheduleDate] = useState(new Date());
     const [scheduleType, setScheduleType] = useState("once");
     const [scheduleMessage, setScheduleMessage] = useState("");
     const [contacts, setContacts] = useState([]);
     const [loadingContacts, setLoadingContacts] = useState(false);
+    const { showSnackbar } = useSnackbar();
 
     const botSettings = [
         {
@@ -199,9 +163,17 @@ export default function UserPage() {
             const data = await response.json();
             if (data.success) {
                 setUser(user);
+                showSnackbar(
+                    translations.settingsSaved || "Settings saved successfully",
+                    "success"
+                );
             }
         } catch (error) {
             console.error("Error updating user:", error);
+            showSnackbar(
+                translations.settingsError || "Error saving settings",
+                "error"
+            );
         }
     };
 
@@ -251,16 +223,43 @@ export default function UserPage() {
                 setScheduleDate(new Date());
                 setScheduleType("once");
                 setScheduleMessage("");
-                alert(
-                    translations.messageScheduled ||
-                        "Message scheduled successfully"
-                );
+                showSnackbar(translations.messageScheduled, "success");
             } else {
                 throw new Error(data.error);
             }
         } catch (error) {
             console.error("Error scheduling message:", error);
-            alert(translations.scheduleError || "Error scheduling message");
+            showSnackbar(translations.scheduleError, "error");
+        }
+    };
+
+    const handleDeleteMessage = async (messageId) => {
+        try {
+            const updatedUser = {
+                ...user,
+                scheduledMessages: user.scheduledMessages.filter(
+                    (msg) => msg.id !== messageId
+                ),
+            };
+
+            const response = await fetch(`${config.API_BASE_URL}/editUser`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(updatedUser),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                setUser(updatedUser);
+                showSnackbar(translations.messageDeleted, "success");
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            console.error("Error deleting message:", error);
+            showSnackbar(translations.deleteError, "error");
         }
     };
 
@@ -308,95 +307,12 @@ export default function UserPage() {
                             maxWidth: "400px",
                         }}
                     >
-                        <Card
-                            sx={{
-                                borderRadius: 2,
-                                boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
-                                height: "100%",
-                                minHeight: "400px",
-                                display: "flex",
-                                flexDirection: "column",
-                                overflow: "hidden",
-                            }}
-                        >
-                            <CardContent
-                                sx={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    p: 4,
-                                    gap: 3,
-                                }}
-                            >
-                                <Typography
-                                    variant="h4"
-                                    sx={{
-                                        fontWeight: "bold",
-                                        color: "#128C7E",
-                                        wordBreak: "break-word",
-                                    }}
-                                >
-                                    {user?.name}
-                                </Typography>
-
-                                <Box
-                                    sx={{
-                                        width: "100%",
-                                        display: "flex",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    {isInSession ? (
-                                        <Check
-                                            sx={{
-                                                fontSize: 60,
-                                                color: "#00A884",
-                                                border: "2px solid #00A884",
-                                                borderRadius: "50%",
-                                                p: 1,
-                                            }}
-                                        />
-                                    ) : (
-                                        <Box
-                                            sx={{
-                                                width: "100%",
-                                                maxWidth: 200,
-                                            }}
-                                        >
-                                            {!qrCode && <LinearProgress />}
-                                            {qrCode && (
-                                                <img
-                                                    src={qrCode}
-                                                    alt="QR Code"
-                                                    style={{
-                                                        width: "100%",
-                                                        height: "auto",
-                                                        borderRadius: "8px",
-                                                    }}
-                                                />
-                                            )}
-                                        </Box>
-                                    )}
-                                </Box>
-
-                                <Button
-                                    variant="contained"
-                                    onClick={getSummery}
-                                    sx={{
-                                        bgcolor: "#128C7E",
-                                        color: "white",
-                                        "&:hover": {
-                                            bgcolor: "#00A884",
-                                        },
-                                        width: "100%",
-                                        py: 1.5,
-                                        borderRadius: "50px",
-                                    }}
-                                >
-                                    {translations.getWeeklyUpdate}
-                                </Button>
-                            </CardContent>
-                        </Card>
+                        <UserProfile
+                            user={user}
+                            isInSession={isInSession}
+                            qrCode={qrCode}
+                            onGetSummary={getSummery}
+                        />
                     </Grid>
 
                     <Grid
@@ -407,295 +323,21 @@ export default function UserPage() {
                             maxWidth: "400px",
                         }}
                     >
-                        <Card
-                            sx={{
-                                borderRadius: 2,
-                                boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
-                                height: "100%",
-                                minHeight: "400px",
-                                display: "flex",
-                                flexDirection: "column",
-                                overflow: "hidden",
-                            }}
-                        >
-                            <CardHeader
-                                title={
-                                    <Typography
-                                        variant="h5"
-                                        sx={{
-                                            fontWeight: "bold",
-                                            color: "#128C7E",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: 1,
-                                        }}
-                                    >
-                                        <Schedule />
-                                        {translations.scheduleMessage ||
-                                            "Schedule Message"}
-                                    </Typography>
-                                }
-                            />
-                            <Divider />
-                            <CardContent>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: 3,
-                                    }}
-                                >
-                                    <FormControl fullWidth>
-                                        <InputLabel>
-                                            {translations.selectContacts ||
-                                                "Select Contacts"}
-                                        </InputLabel>
-                                        <Select
-                                            multiple
-                                            value={selectedContacts}
-                                            onChange={(e) =>
-                                                setSelectedContacts(
-                                                    e.target.value
-                                                )
-                                            }
-                                            renderValue={(selected) => (
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        flexWrap: "wrap",
-                                                        gap: 0.5,
-                                                    }}
-                                                >
-                                                    {selected.map((value) => (
-                                                        <Chip
-                                                            key={value}
-                                                            label={
-                                                                contacts.find(
-                                                                    (c) =>
-                                                                        c.id ===
-                                                                        value
-                                                                )?.name
-                                                            }
-                                                            sx={{
-                                                                bgcolor:
-                                                                    "#128C7E",
-                                                                color: "white",
-                                                            }}
-                                                        />
-                                                    ))}
-                                                </Box>
-                                            )}
-                                        >
-                                            {loadingContacts ? (
-                                                <MenuItem disabled>
-                                                    <Box
-                                                        sx={{
-                                                            display: "flex",
-                                                            alignItems:
-                                                                "center",
-                                                            gap: 1,
-                                                        }}
-                                                    >
-                                                        <CircularProgress
-                                                            size={20}
-                                                        />
-                                                        {translations.loadingContacts ||
-                                                            "Loading contacts..."}
-                                                    </Box>
-                                                </MenuItem>
-                                            ) : contacts.length === 0 ? (
-                                                <MenuItem disabled>
-                                                    {translations.noContacts ||
-                                                        "No contacts available"}
-                                                </MenuItem>
-                                            ) : (
-                                                contacts.map((contact) => (
-                                                    <MenuItem
-                                                        key={contact.id}
-                                                        value={contact.id}
-                                                    >
-                                                        <ListItemAvatar>
-                                                            {contact.avatar ? (
-                                                                <Avatar
-                                                                    src={
-                                                                        contact.avatar
-                                                                    }
-                                                                />
-                                                            ) : (
-                                                                <Avatar
-                                                                    sx={{
-                                                                        bgcolor:
-                                                                            "#128C7E",
-                                                                    }}
-                                                                >
-                                                                    <Person />
-                                                                </Avatar>
-                                                            )}
-                                                        </ListItemAvatar>
-                                                        <ListItemText
-                                                            primary={
-                                                                contact.name
-                                                            }
-                                                            secondary={
-                                                                contact.isGroup
-                                                                    ? `${
-                                                                          contact.participants
-                                                                      } ${
-                                                                          translations.participants ||
-                                                                          "participants"
-                                                                      }`
-                                                                    : contact.lastSeen
-                                                                    ? moment(
-                                                                          contact.lastSeen
-                                                                      ).fromNow()
-                                                                    : ""
-                                                            }
-                                                        />
-                                                    </MenuItem>
-                                                ))
-                                            )}
-                                        </Select>
-                                    </FormControl>
-
-                                    <LocalizationProvider
-                                        dateAdapter={AdapterDateFns}
-                                    >
-                                        <DateTimePicker
-                                            label={
-                                                translations.scheduleDateTime ||
-                                                "Schedule Date & Time"
-                                            }
-                                            value={scheduleDate}
-                                            onChange={(newValue) =>
-                                                setScheduleDate(newValue)
-                                            }
-                                            sx={{
-                                                "& .MuiOutlinedInput-root": {
-                                                    "&:hover fieldset": {
-                                                        borderColor: "#128C7E",
-                                                    },
-                                                },
-                                            }}
-                                        />
-                                    </LocalizationProvider>
-
-                                    <FormControl>
-                                        <RadioGroup
-                                            row
-                                            value={scheduleType}
-                                            onChange={(e) =>
-                                                setScheduleType(e.target.value)
-                                            }
-                                        >
-                                            <FormControlLabel
-                                                value="once"
-                                                control={
-                                                    <Radio
-                                                        sx={{
-                                                            color: "#128C7E",
-                                                            "&.Mui-checked": {
-                                                                color: "#128C7E",
-                                                            },
-                                                        }}
-                                                    />
-                                                }
-                                                label={
-                                                    translations.once || "Once"
-                                                }
-                                            />
-                                            <FormControlLabel
-                                                value="daily"
-                                                control={
-                                                    <Radio
-                                                        sx={{
-                                                            color: "#128C7E",
-                                                            "&.Mui-checked": {
-                                                                color: "#128C7E",
-                                                            },
-                                                        }}
-                                                    />
-                                                }
-                                                label={
-                                                    translations.daily ||
-                                                    "Daily"
-                                                }
-                                            />
-                                            <FormControlLabel
-                                                value="weekly"
-                                                control={
-                                                    <Radio
-                                                        sx={{
-                                                            color: "#128C7E",
-                                                            "&.Mui-checked": {
-                                                                color: "#128C7E",
-                                                            },
-                                                        }}
-                                                    />
-                                                }
-                                                label={
-                                                    translations.weekly ||
-                                                    "Weekly"
-                                                }
-                                            />
-                                            <FormControlLabel
-                                                value="monthly"
-                                                control={
-                                                    <Radio
-                                                        sx={{
-                                                            color: "#128C7E",
-                                                            "&.Mui-checked": {
-                                                                color: "#128C7E",
-                                                            },
-                                                        }}
-                                                    />
-                                                }
-                                                label={
-                                                    translations.monthly ||
-                                                    "Monthly"
-                                                }
-                                            />
-                                        </RadioGroup>
-                                    </FormControl>
-
-                                    <TextField
-                                        multiline
-                                        rows={4}
-                                        value={scheduleMessage}
-                                        onChange={(e) =>
-                                            setScheduleMessage(e.target.value)
-                                        }
-                                        label={
-                                            translations.message || "Message"
-                                        }
-                                        fullWidth
-                                        sx={{
-                                            "& .MuiOutlinedInput-root": {
-                                                "&:hover fieldset": {
-                                                    borderColor: "#128C7E",
-                                                },
-                                            },
-                                        }}
-                                    />
-
-                                    <Button
-                                        variant="contained"
-                                        onClick={handleScheduleSubmit}
-                                        sx={{
-                                            bgcolor: "#128C7E",
-                                            color: "white",
-                                            "&:hover": {
-                                                bgcolor: "#00A884",
-                                            },
-                                            py: 1.5,
-                                            borderRadius: "50px",
-                                        }}
-                                    >
-                                        {translations.scheduleMessage ||
-                                            "Schedule Message"}
-                                    </Button>
-                                </Box>
-                            </CardContent>
-                        </Card>
+                        <MessageScheduler
+                            contacts={contacts}
+                            loadingContacts={loadingContacts}
+                            selectedContacts={selectedContacts}
+                            setSelectedContacts={setSelectedContacts}
+                            scheduleDate={scheduleDate}
+                            setScheduleDate={setScheduleDate}
+                            scheduleType={scheduleType}
+                            setScheduleType={setScheduleType}
+                            scheduleMessage={scheduleMessage}
+                            setScheduleMessage={setScheduleMessage}
+                            onScheduleSubmit={handleScheduleSubmit}
+                            user={user}
+                            onDeleteMessage={handleDeleteMessage}
+                        />
                     </Grid>
 
                     <Grid
@@ -706,166 +348,14 @@ export default function UserPage() {
                             maxWidth: "400px",
                         }}
                     >
-                        <Card
-                            sx={{
-                                borderRadius: 2,
-                                boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
-                                height: "100%",
-                                minHeight: "400px",
-                                display: "flex",
-                                flexDirection: "column",
-                                overflow: "hidden",
-                            }}
-                        >
-                            <CardHeader
-                                title={
-                                    <Typography
-                                        variant="h5"
-                                        sx={{
-                                            fontWeight: "bold",
-                                            color: "#128C7E",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: 1,
-                                        }}
-                                    >
-                                        <Settings />
-                                        {translations.botSettings}
-                                    </Typography>
-                                }
-                            />
-                            <Divider />
-                            <CardContent>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: 3,
-                                    }}
-                                >
-                                    {botSettings.map((item) => (
-                                        <Box
-                                            key={item.id}
-                                            sx={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: 2,
-                                                p: 2,
-                                                borderRadius: 1,
-                                                bgcolor: "background.paper",
-                                                boxShadow:
-                                                    "0 2px 8px rgba(0,0,0,0.05)",
-                                            }}
-                                        >
-                                            <Tooltip title={item.text}>
-                                                <IconButton
-                                                    sx={{
-                                                        color: user?.settingsFlags?.includes(
-                                                            item.id
-                                                        )
-                                                            ? "#128C7E"
-                                                            : "text.secondary",
-                                                    }}
-                                                >
-                                                    {item.icon}
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Typography sx={{ flex: 1 }}>
-                                                {item.text}
-                                            </Typography>
-                                            <Checkbox
-                                                checked={
-                                                    user?.settingsFlags?.includes(
-                                                        item.id
-                                                    ) || false
-                                                }
-                                                onChange={() =>
-                                                    changeSettings(item.id)
-                                                }
-                                                sx={{
-                                                    color: "#128C7E",
-                                                    "&.Mui-checked": {
-                                                        color: "#128C7E",
-                                                    },
-                                                }}
-                                            />
-                                        </Box>
-                                    ))}
-
-                                    {user?.settingsFlags?.includes("4") && (
-                                        <TextField
-                                            value={
-                                                user?.settings
-                                                    ?.timeBeforeEventNotification ||
-                                                ""
-                                            }
-                                            onChange={({ target }) => {
-                                                setUser({
-                                                    ...user,
-                                                    settings: {
-                                                        ...user.settings,
-                                                        timeBeforeEventNotification:
-                                                            target.value,
-                                                    },
-                                                });
-                                            }}
-                                            fullWidth
-                                            type="number"
-                                            label={
-                                                translations.minutesBeforeEvent
-                                            }
-                                            inputProps={{
-                                                step: 15,
-                                                max: 2500,
-                                                min: 0,
-                                            }}
-                                            sx={{
-                                                "& .MuiOutlinedInput-root": {
-                                                    "&:hover fieldset": {
-                                                        borderColor: "#128C7E",
-                                                    },
-                                                },
-                                            }}
-                                        />
-                                    )}
-
-                                    <Button
-                                        variant="outlined"
-                                        onClick={connectToGoogleCalendar}
-                                        sx={{
-                                            borderColor: "#128C7E",
-                                            color: "#128C7E",
-                                            "&:hover": {
-                                                borderColor: "#00A884",
-                                                bgcolor: "rgba(0,168,132,0.04)",
-                                                color: "#00A884",
-                                            },
-                                            py: 1.5,
-                                            borderRadius: "50px",
-                                        }}
-                                    >
-                                        {translations.connectGoogleCalendar}
-                                    </Button>
-
-                                    <Button
-                                        variant="contained"
-                                        endIcon={<Save />}
-                                        onClick={saveSettings}
-                                        sx={{
-                                            bgcolor: "#128C7E",
-                                            color: "white",
-                                            "&:hover": {
-                                                bgcolor: "#00A884",
-                                            },
-                                            py: 1.5,
-                                            borderRadius: "50px",
-                                        }}
-                                    >
-                                        {translations.saveSettings}
-                                    </Button>
-                                </Box>
-                            </CardContent>
-                        </Card>
+                        <BotSettings
+                            user={user}
+                            setUser={setUser}
+                            botSettings={botSettings}
+                            onChangeSettings={changeSettings}
+                            onSaveSettings={saveSettings}
+                            onConnectGoogleCalendar={connectToGoogleCalendar}
+                        />
                     </Grid>
                 </Grid>
             </Container>
