@@ -14,6 +14,14 @@ export default {
     invalidCredentials: "Invalid credentials",
     loginFailed: "Login failed. Please try again.",
 
+    // Signup Page
+    name: "Name",
+    email: "Email",
+    govID: "Government ID",
+    nationality: "Nationality",
+    userExists: "User already exists",
+    signupFailed: "Sign up failed",
+
     // User Page
     botSettings: "Bot Settings",
     getWeeklyUpdate: "Get Weekly Update Now",
@@ -22,10 +30,10 @@ export default {
     googleCalendar: "Schedule events in Google Calendar",
     eventNotifications: "Get notifications before events",
     minutesBeforeEvent: "Minutes before event for notification",
-    connectGoogleCalendar: "Connect to Google Calendar",
+    connectGoogleCalendar: "Connect with Google Calendar",
     saveSettings: "Save Settings",
 
-    // Scheduled Messages
+    // Schedule Message
     scheduleMessage: "Schedule Message",
     selectContacts: "Select Contacts",
     scheduleDateTime: "Schedule Date & Time",
@@ -35,11 +43,15 @@ export default {
     daily: "Daily",
     weekly: "Weekly",
     monthly: "Monthly",
+    loadingContacts: "Loading contacts...",
+    noContacts: "No contacts available",
+    messageScheduled: "Message scheduled successfully",
+    scheduleError: "Error scheduling message",
 
     // Auth Pages
-    authSuccess: "Successfully connected to Google Calendar!",
-    redirecting: "Redirecting you back to the app...",
-    authError: "Failed to connect to Google Calendar",
+    authSuccess: "Successfully connected with Google Calendar!",
+    redirecting: "Redirecting back to application...",
+    authError: "Error connecting with Google Calendar",
     tryAgainLater: "You can try again later from your account settings",
     returnToDashboard: "Return to Dashboard",
 

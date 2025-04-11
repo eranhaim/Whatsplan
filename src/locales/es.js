@@ -38,11 +38,14 @@ export default {
     selectContacts: "Seleccionar Contactos",
     scheduleDateTime: "Fecha y Hora Programada",
     message: "Mensaje",
-    participants: "participantes",
     once: "Una vez",
     daily: "Diario",
     weekly: "Semanal",
     monthly: "Mensual",
+    loadingContacts: "Cargando contactos...",
+    noContacts: "No hay contactos disponibles",
+    messageScheduled: "Mensaje programado exitosamente",
+    scheduleError: "Error al programar el mensaje",
 
     // Auth Pages
     authSuccess: "¡Conexión exitosa con Google Calendar!",

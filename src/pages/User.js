@@ -36,6 +36,7 @@ import {
     RadioGroup,
     FormControlLabel,
     Radio,
+    CircularProgress,
 } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
@@ -43,6 +44,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import config from "../config";
 import { useLanguage } from "../contexts/LanguageContext";
+import moment from "moment";
 
 export default function UserPage() {
     const [user, setUser] = useState(null);
@@ -54,6 +56,8 @@ export default function UserPage() {
     const [scheduleDate, setScheduleDate] = useState(new Date());
     const [scheduleType, setScheduleType] = useState("once");
     const [scheduleMessage, setScheduleMessage] = useState("");
+    const [contacts, setContacts] = useState([]);
+    const [loadingContacts, setLoadingContacts] = useState(false);
 
     const botSettings = [
         {
@@ -75,42 +79,6 @@ export default function UserPage() {
             id: "4",
             text: translations.eventNotifications,
             icon: <Notifications />,
-        },
-    ];
-
-    // Mock data for contacts
-    const mockContacts = [
-        {
-            id: 1,
-            name: "John Doe",
-            avatar: "https://i.pravatar.cc/150?img=1",
-            lastSeen: "2 hours ago",
-        },
-        {
-            id: 2,
-            name: "Jane Smith",
-            avatar: "https://i.pravatar.cc/150?img=2",
-            lastSeen: "1 hour ago",
-        },
-        {
-            id: 3,
-            name: "Group Chat 1",
-            avatar: "",
-            isGroup: true,
-            participants: 5,
-        },
-        {
-            id: 4,
-            name: "Alice Johnson",
-            avatar: "https://i.pravatar.cc/150?img=3",
-            lastSeen: "3 hours ago",
-        },
-        {
-            id: 5,
-            name: "Family Group",
-            avatar: "",
-            isGroup: true,
-            participants: 8,
         },
     ];
 
@@ -157,6 +125,32 @@ export default function UserPage() {
 
         fetchUser();
     }, [phoneNum]);
+
+    useEffect(() => {
+        const fetchContacts = async () => {
+            if (!user?._id) return;
+
+            setLoadingContacts(true);
+            try {
+                const response = await fetch(
+                    `${config.API_BASE_URL}/getContacts/${user._id}`
+                );
+                const data = await response.json();
+
+                if (data.success) {
+                    setContacts(data.contacts);
+                } else {
+                    console.error("Failed to fetch contacts:", data.error);
+                }
+            } catch (error) {
+                console.error("Error fetching contacts:", error);
+            } finally {
+                setLoadingContacts(false);
+            }
+        };
+
+        fetchContacts();
+    }, [user?._id]);
 
     const getSummery = async () => {
         try {
@@ -225,14 +219,49 @@ export default function UserPage() {
         }
     };
 
-    const handleScheduleSubmit = () => {
-        // TODO: Implement schedule submission
-        console.log({
-            contacts: selectedContacts,
-            date: scheduleDate,
-            type: scheduleType,
-            message: scheduleMessage,
-        });
+    const handleScheduleSubmit = async () => {
+        try {
+            const response = await fetch(
+                `${config.API_BASE_URL}/scheduleMessage`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        userID: user._id,
+                        contacts: selectedContacts.map((id) => {
+                            const contact = contacts.find((c) => c.id === id);
+                            return {
+                                id: contact.id,
+                                name: contact.name,
+                                isGroup: contact.isGroup,
+                            };
+                        }),
+                        dateTime: scheduleDate.toISOString(),
+                        message: scheduleMessage,
+                        frequency: scheduleType,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+            if (data.success) {
+                setSelectedContacts([]);
+                setScheduleDate(new Date());
+                setScheduleType("once");
+                setScheduleMessage("");
+                alert(
+                    translations.messageScheduled ||
+                        "Message scheduled successfully"
+                );
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            console.error("Error scheduling message:", error);
+            alert(translations.scheduleError || "Error scheduling message");
+        }
     };
 
     return (
@@ -441,7 +470,7 @@ export default function UserPage() {
                                                         <Chip
                                                             key={value}
                                                             label={
-                                                                mockContacts.find(
+                                                                contacts.find(
                                                                     (c) =>
                                                                         c.id ===
                                                                         value
@@ -457,53 +486,74 @@ export default function UserPage() {
                                                 </Box>
                                             )}
                                         >
-                                            {mockContacts.map((contact) => (
-                                                <MenuItem
-                                                    key={contact.id}
-                                                    value={contact.id}
-                                                >
-                                                    <ListItemAvatar>
-                                                        {contact.isGroup ? (
-                                                            <Avatar
-                                                                sx={{
-                                                                    bgcolor:
-                                                                        "#128C7E",
-                                                                }}
-                                                            >
-                                                                <Group />
-                                                            </Avatar>
-                                                        ) : contact.avatar ? (
-                                                            <Avatar
-                                                                src={
-                                                                    contact.avatar
-                                                                }
-                                                            />
-                                                        ) : (
-                                                            <Avatar
-                                                                sx={{
-                                                                    bgcolor:
-                                                                        "#128C7E",
-                                                                }}
-                                                            >
-                                                                <Person />
-                                                            </Avatar>
-                                                        )}
-                                                    </ListItemAvatar>
-                                                    <ListItemText
-                                                        primary={contact.name}
-                                                        secondary={
-                                                            contact.isGroup
-                                                                ? `${
-                                                                      contact.participants
-                                                                  } ${
-                                                                      translations.participants ||
-                                                                      "participants"
-                                                                  }`
-                                                                : contact.lastSeen
-                                                        }
-                                                    />
+                                            {loadingContacts ? (
+                                                <MenuItem disabled>
+                                                    <Box
+                                                        sx={{
+                                                            display: "flex",
+                                                            alignItems:
+                                                                "center",
+                                                            gap: 1,
+                                                        }}
+                                                    >
+                                                        <CircularProgress
+                                                            size={20}
+                                                        />
+                                                        {translations.loadingContacts ||
+                                                            "Loading contacts..."}
+                                                    </Box>
                                                 </MenuItem>
-                                            ))}
+                                            ) : contacts.length === 0 ? (
+                                                <MenuItem disabled>
+                                                    {translations.noContacts ||
+                                                        "No contacts available"}
+                                                </MenuItem>
+                                            ) : (
+                                                contacts.map((contact) => (
+                                                    <MenuItem
+                                                        key={contact.id}
+                                                        value={contact.id}
+                                                    >
+                                                        <ListItemAvatar>
+                                                            {contact.avatar ? (
+                                                                <Avatar
+                                                                    src={
+                                                                        contact.avatar
+                                                                    }
+                                                                />
+                                                            ) : (
+                                                                <Avatar
+                                                                    sx={{
+                                                                        bgcolor:
+                                                                            "#128C7E",
+                                                                    }}
+                                                                >
+                                                                    <Person />
+                                                                </Avatar>
+                                                            )}
+                                                        </ListItemAvatar>
+                                                        <ListItemText
+                                                            primary={
+                                                                contact.name
+                                                            }
+                                                            secondary={
+                                                                contact.isGroup
+                                                                    ? `${
+                                                                          contact.participants
+                                                                      } ${
+                                                                          translations.participants ||
+                                                                          "participants"
+                                                                      }`
+                                                                    : contact.lastSeen
+                                                                    ? moment(
+                                                                          contact.lastSeen
+                                                                      ).fromNow()
+                                                                    : ""
+                                                            }
+                                                        />
+                                                    </MenuItem>
+                                                ))
+                                            )}
                                         </Select>
                                     </FormControl>
 

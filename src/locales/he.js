@@ -14,6 +14,14 @@ export default {
     invalidCredentials: "פרטי התחברות שגויים",
     loginFailed: "ההתחברות נכשלה. אנא נסה שוב.",
 
+    // Signup Page
+    name: "שם",
+    email: "דואר אלקטרוני",
+    govID: "תעודת זהות",
+    nationality: "אזרחות",
+    userExists: "המשתמש כבר קיים",
+    signupFailed: "ההרשמה נכשלה",
+
     // User Page
     botSettings: "הגדרות בוט",
     getWeeklyUpdate: "לקבל עדכון שבועי עכשיו",
@@ -25,7 +33,7 @@ export default {
     connectGoogleCalendar: "התחבר ל-Google Calendar",
     saveSettings: "שמור הגדרות",
 
-    // Scheduled Messages
+    // Schedule Message
     scheduleMessage: "תזמן הודעה",
     selectContacts: "בחר אנשי קשר",
     scheduleDateTime: "בחר תאריך ושעה",
@@ -35,6 +43,10 @@ export default {
     daily: "יומי",
     weekly: "שבועי",
     monthly: "חודשי",
+    loadingContacts: "טוען אנשי קשר...",
+    noContacts: "אין אנשי קשר זמינים",
+    messageScheduled: "ההודעה תוזמנה בהצלחה",
+    scheduleError: "שגיאה בתזמון ההודעה",
 
     // Auth Pages
     authSuccess: "החיבור ל-Google Calendar הצליח!",

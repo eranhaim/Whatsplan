@@ -17,38 +17,41 @@ export default {
     // Signup Page
     name: "Имя",
     email: "Электронная почта",
-    govID: "ID правительства",
-    nationality: "Национальность",
+    govID: "Удостоверение личности",
+    nationality: "Гражданство",
     userExists: "Пользователь уже существует",
     signupFailed: "Ошибка регистрации",
 
     // User Page
     botSettings: "Настройки бота",
-    getWeeklyUpdate: "Получить еженедельное обновление",
-    weeklySummary: "Получать еженедельную сводку в воскресенье",
-    dailyUpdate: "Получать ежедневное обновление утром",
-    googleCalendar: "Планировать события в Google Календаре",
+    getWeeklyUpdate: "Получить еженедельное обновление сейчас",
+    weeklySummary: "Получать еженедельный отчет по воскресеньям",
+    dailyUpdate: "Получать ежедневное обновление каждое утро",
+    googleCalendar: "Планировать события в Google Calendar",
     eventNotifications: "Получать уведомления перед событиями",
     minutesBeforeEvent: "Минут до события для уведомления",
-    connectGoogleCalendar: "Подключить Google Календарь",
+    connectGoogleCalendar: "Подключиться к Google Calendar",
     saveSettings: "Сохранить настройки",
 
-    // Scheduled Messages
+    // Schedule Message
     scheduleMessage: "Запланировать сообщение",
     selectContacts: "Выбрать контакты",
-    scheduleDateTime: "Выбрать дату и время",
+    scheduleDateTime: "Дата и время отправки",
     message: "Сообщение",
-    participants: "участников",
     once: "Один раз",
     daily: "Ежедневно",
     weekly: "Еженедельно",
     monthly: "Ежемесячно",
+    loadingContacts: "Загрузка контактов...",
+    noContacts: "Нет доступных контактов",
+    messageScheduled: "Сообщение успешно запланировано",
+    scheduleError: "Ошибка планирования сообщения",
 
     // Auth Pages
-    authSuccess: "Успешное подключение к Google Календарю!",
+    authSuccess: "Успешное подключение к Google Calendar!",
     redirecting: "Перенаправление обратно в приложение...",
-    authError: "Не удалось подключиться к Google Календарю",
-    tryAgainLater: "Вы можете попробовать снова позже в настройках аккаунта",
+    authError: "Ошибка подключения к Google Calendar",
+    tryAgainLater: "Вы можете попробовать позже в настройках аккаунта",
     returnToDashboard: "Вернуться на панель управления",
 
     // Landing Page
