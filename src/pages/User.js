@@ -204,31 +204,33 @@ export default function UserPage() {
         }
     };
 
-    const handleScheduleSubmit = async () => {
+    const handleScheduleSubmit = async (messageId) => {
         try {
-            const response = await fetch(
-                `${config.API_BASE_URL}/scheduleMessage`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        userID: user._id,
-                        contacts: selectedContacts.map((id) => {
-                            const contact = contacts.find((c) => c.id === id);
-                            return {
-                                id: contact.id,
-                                name: contact.name,
-                                isGroup: contact.isGroup,
-                            };
-                        }),
-                        dateTime: scheduleDate.toISOString(),
-                        message: scheduleMessage,
-                        frequency: scheduleType,
+            const endpoint = messageId
+                ? `${config.API_BASE_URL}/editScheduledMessage`
+                : `${config.API_BASE_URL}/scheduleMessage`;
+
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    messageId,
+                    userID: user._id,
+                    contacts: selectedContacts.map((id) => {
+                        const contact = contacts.find((c) => c.id === id);
+                        return {
+                            id: contact.id,
+                            name: contact.name,
+                            isGroup: contact.isGroup,
+                        };
                     }),
-                }
-            );
+                    dateTime: scheduleDate.toISOString(),
+                    message: scheduleMessage,
+                    frequency: scheduleType,
+                }),
+            });
 
             const data = await response.json();
             if (data.success) {
@@ -236,13 +238,21 @@ export default function UserPage() {
                 setScheduleDate(new Date());
                 setScheduleType("once");
                 setScheduleMessage("");
-                showSnackbar(translations.messageScheduled, "success");
+                showSnackbar(
+                    messageId
+                        ? translations.messageEdited
+                        : translations.messageScheduled,
+                    "success"
+                );
             } else {
                 throw new Error(data.error);
             }
         } catch (error) {
             console.error("Error scheduling message:", error);
-            showSnackbar(translations.scheduleError, "error");
+            showSnackbar(
+                messageId ? translations.editError : translations.scheduleError,
+                "error"
+            );
         }
     };
 

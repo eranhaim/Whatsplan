@@ -1,4 +1,4 @@
-import { Schedule, Delete } from "@mui/icons-material";
+import { Schedule, Delete, Edit } from "@mui/icons-material";
 import {
     Dialog,
     DialogTitle,
@@ -10,6 +10,7 @@ import {
     IconButton,
     Button,
     Typography,
+    Box,
 } from "@mui/material";
 import { useLanguage } from "../../contexts/LanguageContext";
 
@@ -18,6 +19,7 @@ export default function ScheduledMessagesDialog({
     onClose,
     scheduledMessages,
     onDeleteMessage,
+    onEditMessage,
 }) {
     const { translations } = useLanguage();
 
@@ -60,15 +62,26 @@ export default function ScheduledMessagesDialog({
                             <ListItem
                                 key={message._id}
                                 secondaryAction={
-                                    <IconButton
-                                        edge="end"
-                                        onClick={() =>
-                                            onDeleteMessage(message.id)
-                                        }
-                                        sx={{ color: "#128C7E" }}
-                                    >
-                                        <Delete />
-                                    </IconButton>
+                                    <Box sx={{ display: "flex", gap: 1 }}>
+                                        <IconButton
+                                            edge="end"
+                                            onClick={() =>
+                                                onEditMessage(message)
+                                            }
+                                            sx={{ color: "#128C7E" }}
+                                        >
+                                            <Edit />
+                                        </IconButton>
+                                        <IconButton
+                                            edge="end"
+                                            onClick={() =>
+                                                onDeleteMessage(message.id)
+                                            }
+                                            sx={{ color: "#128C7E" }}
+                                        >
+                                            <Delete />
+                                        </IconButton>
+                                    </Box>
                                 }
                             >
                                 <ListItemText

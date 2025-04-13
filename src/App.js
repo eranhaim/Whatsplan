@@ -7,7 +7,6 @@ import "./index.css";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { green } from "@mui/material/colors";
 import SignUpPage from "./pages/SignUp";
-import ParticlesComponent from "./components/particles";
 import AuthSuccess from "./pages/AuthSuccess";
 import AuthError from "./pages/AuthError";
 import { LanguageProvider } from "./contexts/LanguageContext";
@@ -27,7 +26,6 @@ function App() {
     return (
         <LanguageProvider>
             <SnackbarProvider>
-                <ParticlesComponent id="particles" style={{ zIndex: -1 }} />
                 <ThemeProvider theme={theme}>
                     <Router>
                         <LanguageSwitcher />

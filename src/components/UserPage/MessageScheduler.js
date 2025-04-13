@@ -44,6 +44,7 @@ export default function MessageScheduler({
 }) {
     const { translations } = useLanguage();
     const [openDialog, setOpenDialog] = useState(false);
+    const [editingMessage, setEditingMessage] = useState(null);
 
     const handleOpenDialog = () => {
         setOpenDialog(true);
@@ -51,6 +52,24 @@ export default function MessageScheduler({
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
+    };
+
+    const handleEditMessage = (message) => {
+        setEditingMessage(message);
+        setSelectedContacts(message.contacts.map((c) => c.id));
+        setScheduleDate(new Date(message.dateTime));
+        setScheduleType(message.frequency);
+        setScheduleMessage(message.message);
+        handleCloseDialog();
+    };
+
+    const handleSubmit = () => {
+        if (editingMessage) {
+            onScheduleSubmit(editingMessage.id);
+            setEditingMessage(null);
+        } else {
+            onScheduleSubmit();
+        }
     };
 
     return (
@@ -78,7 +97,9 @@ export default function MessageScheduler({
                         }}
                     >
                         <Schedule />
-                        {translations.scheduleMessage || "Schedule Message"}
+                        {editingMessage
+                            ? translations.editScheduledMessage
+                            : translations.scheduleMessage}
                     </Typography>
                 }
             />
@@ -105,8 +126,7 @@ export default function MessageScheduler({
                             alignSelf: "flex-start",
                         }}
                     >
-                        {translations.viewScheduledMessages ||
-                            "View Scheduled Messages"}
+                        {translations.viewScheduledMessages}
                     </Button>
 
                     <FormControl fullWidth>
@@ -164,14 +184,12 @@ export default function MessageScheduler({
                                         }}
                                     >
                                         <CircularProgress size={20} />
-                                        {translations.loadingContacts ||
-                                            "Loading contacts..."}
+                                        {translations.loadingContacts}
                                     </Box>
                                 </MenuItem>
                             ) : contacts.length === 0 ? (
                                 <MenuItem disabled>
-                                    {translations.noContacts ||
-                                        "No contacts available"}
+                                    {translations.noContacts}
                                 </MenuItem>
                             ) : (
                                 contacts.map((contact) => (
@@ -220,10 +238,7 @@ export default function MessageScheduler({
 
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DateTimePicker
-                            label={
-                                translations.scheduleDateTime ||
-                                "Schedule Date & Time"
-                            }
+                            label={translations.scheduleDateTime}
                             value={scheduleDate}
                             onChange={(newValue) => setScheduleDate(newValue)}
                             sx={{
@@ -254,7 +269,7 @@ export default function MessageScheduler({
                                         }}
                                     />
                                 }
-                                label={translations.once || "Once"}
+                                label={translations.once}
                             />
                             <FormControlLabel
                                 value="daily"
@@ -268,7 +283,7 @@ export default function MessageScheduler({
                                         }}
                                     />
                                 }
-                                label={translations.daily || "Daily"}
+                                label={translations.daily}
                             />
                             <FormControlLabel
                                 value="weekly"
@@ -282,7 +297,7 @@ export default function MessageScheduler({
                                         }}
                                     />
                                 }
-                                label={translations.weekly || "Weekly"}
+                                label={translations.weekly}
                             />
                             <FormControlLabel
                                 value="monthly"
@@ -296,7 +311,7 @@ export default function MessageScheduler({
                                         }}
                                     />
                                 }
-                                label={translations.monthly || "Monthly"}
+                                label={translations.monthly}
                             />
                         </RadioGroup>
                     </FormControl>
@@ -306,7 +321,7 @@ export default function MessageScheduler({
                         rows={4}
                         value={scheduleMessage}
                         onChange={(e) => setScheduleMessage(e.target.value)}
-                        label={translations.message || "Message"}
+                        label={translations.message}
                         fullWidth
                         sx={{
                             "& .MuiOutlinedInput-root": {
@@ -319,7 +334,7 @@ export default function MessageScheduler({
 
                     <Button
                         variant="contained"
-                        onClick={onScheduleSubmit}
+                        onClick={handleSubmit}
                         sx={{
                             bgcolor: "#128C7E",
                             color: "white",
@@ -330,7 +345,9 @@ export default function MessageScheduler({
                             borderRadius: "50px",
                         }}
                     >
-                        {translations.scheduleMessage || "Schedule Message"}
+                        {editingMessage
+                            ? translations.editMessage
+                            : translations.scheduleMessage}
                     </Button>
                 </Box>
             </CardContent>
@@ -340,6 +357,7 @@ export default function MessageScheduler({
                 onClose={handleCloseDialog}
                 scheduledMessages={user?.scheduledMessages}
                 onDeleteMessage={onDeleteMessage}
+                onEditMessage={handleEditMessage}
             />
         </Card>
     );

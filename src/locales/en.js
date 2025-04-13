@@ -25,6 +25,8 @@ const en = {
     // User Page
     botSettings: "Bot Settings",
     getWeeklyUpdate: "Get Weekly Update Now",
+    getDailyUpdate: "Get Daily Update",
+    getMonthlyEvents: "Get Monthly Events",
     weeklySummary: "Get weekly summary on Sunday",
     dailyUpdate: "Get daily update every morning",
     googleCalendar: "Schedule events in Google Calendar",
@@ -57,6 +59,10 @@ const en = {
     close: "Close",
     messageDeleted: "Message deleted successfully",
     deleteError: "Error deleting message",
+    editMessage: "Edit Message",
+    editScheduledMessage: "Edit Scheduled Message",
+    messageEdited: "Message edited successfully",
+    editError: "Error editing message",
 
     // Auth Pages
     authSuccess: "Successfully connected with Google Calendar!",

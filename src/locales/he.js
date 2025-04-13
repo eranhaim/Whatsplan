@@ -25,6 +25,8 @@ const he = {
     // User Page
     botSettings: "הגדרות בוט",
     getWeeklyUpdate: "לקבל עדכון שבועי עכשיו",
+    getDailyUpdate: "קבל עדכון יומי",
+    getMonthlyEvents: "קבל אירועים חודשיים",
     weeklySummary: "לקבל סיכום שבועי ביום ראשון",
     dailyUpdate: "לקבל עדכון יומי בבוקר כל יום",
     googleCalendar: "לתזמן אירועים ב-Google Calendar",
@@ -57,6 +59,10 @@ const he = {
     close: "סגור",
     messageDeleted: "ההודעה נמחקה בהצלחה",
     deleteError: "שגיאה במחיקת ההודעה",
+    editMessage: "ערוך הודעה",
+    editScheduledMessage: "ערוך הודעה מתוזמנת",
+    messageEdited: "ההודעה נערכה בהצלחה",
+    editError: "שגיאה בעריכת ההודעה",
 
     // Auth Pages
     authSuccess: "התחברת בהצלחה ל-Google Calendar!",

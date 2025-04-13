@@ -25,6 +25,8 @@ const ru = {
     // User Page
     botSettings: "Настройки бота",
     getWeeklyUpdate: "Получить еженедельное обновление сейчас",
+    getDailyUpdate: "Получить ежедневное обновление",
+    getMonthlyEvents: "Получить ежемесячные события",
     weeklySummary: "Получать еженедельный обзор по воскресеньям",
     dailyUpdate: "Получать ежедневное обновление каждое утро",
     googleCalendar: "Планировать события в Google Calendar",
@@ -57,6 +59,10 @@ const ru = {
     close: "Закрыть",
     messageDeleted: "Сообщение успешно удалено",
     deleteError: "Ошибка при удалении сообщения",
+    editMessage: "Редактировать сообщение",
+    editScheduledMessage: "Редактировать запланированное сообщение",
+    messageEdited: "Сообщение успешно отредактировано",
+    editError: "Ошибка при редактировании сообщения",
 
     // Auth Pages
     authSuccess: "Успешно подключено к Google Calendar!",
