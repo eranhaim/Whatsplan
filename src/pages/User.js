@@ -22,6 +22,8 @@ export default function UserPage() {
     const [contacts, setContacts] = useState([]);
     const [loadingContacts, setLoadingContacts] = useState(false);
     const [loadingWeeklyUpdate, setLoadingWeeklyUpdate] = useState(false);
+    const [loadingDailyUpdate, setLoadingDailyUpdate] = useState(false);
+    const [loadingMonthlyEvents, setLoadingMonthlyEvents] = useState(false);
     const { showSnackbar } = useSnackbar();
 
     const botSettings = [
@@ -150,6 +152,66 @@ export default function UserPage() {
             );
         } finally {
             setLoadingWeeklyUpdate(false);
+        }
+    };
+
+    const handleGetDailyUpdate = async () => {
+        try {
+            setLoadingDailyUpdate(true);
+            const response = await fetch(
+                `${config.API_BASE_URL}/getDailyEvents`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        userID: user._id,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+            if (data.success) {
+                showSnackbar(translations.dailyUpdate, "success");
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            console.error("Error getting daily update:", error);
+            showSnackbar(translations.error, "error");
+        } finally {
+            setLoadingDailyUpdate(false);
+        }
+    };
+
+    const handleGetMonthlyEvents = async () => {
+        try {
+            setLoadingMonthlyEvents(true);
+            const response = await fetch(
+                `${config.API_BASE_URL}/getMonthlyEvents`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        userID: user._id,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+            if (data.success) {
+                showSnackbar(translations.getMonthlyEvents, "success");
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            console.error("Error getting monthly events:", error);
+            showSnackbar(translations.error, "error");
+        } finally {
+            setLoadingMonthlyEvents(false);
         }
     };
 
@@ -335,7 +397,11 @@ export default function UserPage() {
                             isInSession={isInSession}
                             qrCode={qrCode}
                             onGetSummary={getSummery}
+                            onGetDailyUpdate={handleGetDailyUpdate}
+                            onGetMonthlyEvents={handleGetMonthlyEvents}
                             loadingWeeklyUpdate={loadingWeeklyUpdate}
+                            loadingDailyUpdate={loadingDailyUpdate}
+                            loadingMonthlyEvents={loadingMonthlyEvents}
                         />
                     </Grid>
 

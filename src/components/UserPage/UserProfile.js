@@ -14,7 +14,11 @@ export default function UserProfile({
     isInSession,
     qrCode,
     onGetSummary,
+    onGetDailyUpdate,
+    onGetMonthlyEvents,
     loadingWeeklyUpdate,
+    loadingDailyUpdate,
+    loadingMonthlyEvents,
 }) {
     const { translations } = useLanguage();
 
@@ -90,11 +94,17 @@ export default function UserProfile({
                     )}
                 </Box>
 
-                <Box sx={{ width: "100%" }}>
+                <Box
+                    sx={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2,
+                    }}
+                >
                     {loadingWeeklyUpdate && (
                         <LinearProgress
                             sx={{
-                                mb: 2,
                                 "& .MuiLinearProgress-bar": {
                                     backgroundColor: "#128C7E",
                                 },
@@ -121,6 +131,68 @@ export default function UserProfile({
                         }}
                     >
                         {translations.getWeeklyUpdate}
+                    </Button>
+
+                    {loadingDailyUpdate && (
+                        <LinearProgress
+                            sx={{
+                                "& .MuiLinearProgress-bar": {
+                                    backgroundColor: "#128C7E",
+                                },
+                            }}
+                        />
+                    )}
+                    <Button
+                        variant="contained"
+                        onClick={onGetDailyUpdate}
+                        disabled={loadingDailyUpdate}
+                        sx={{
+                            bgcolor: "#128C7E",
+                            color: "white",
+                            "&:hover": {
+                                bgcolor: "#00A884",
+                            },
+                            "&:disabled": {
+                                bgcolor: "#cccccc",
+                                color: "#666666",
+                            },
+                            width: "100%",
+                            py: 1.5,
+                            borderRadius: "50px",
+                        }}
+                    >
+                        {translations.getDailyUpdate}
+                    </Button>
+
+                    {loadingMonthlyEvents && (
+                        <LinearProgress
+                            sx={{
+                                "& .MuiLinearProgress-bar": {
+                                    backgroundColor: "#128C7E",
+                                },
+                            }}
+                        />
+                    )}
+                    <Button
+                        variant="contained"
+                        onClick={onGetMonthlyEvents}
+                        disabled={loadingMonthlyEvents}
+                        sx={{
+                            bgcolor: "#128C7E",
+                            color: "white",
+                            "&:hover": {
+                                bgcolor: "#00A884",
+                            },
+                            "&:disabled": {
+                                bgcolor: "#cccccc",
+                                color: "#666666",
+                            },
+                            width: "100%",
+                            py: 1.5,
+                            borderRadius: "50px",
+                        }}
+                    >
+                        {translations.getMonthlyEvents}
                     </Button>
                 </Box>
             </CardContent>
