@@ -18,7 +18,13 @@ const GoogleAuthDialog = ({ open, onClose, user }) => {
         try {
             setError(null);
             const response = await fetch(
-                `${config.API_BASE_URL}/initiateGoogleAuth?userID=${user._id}`
+                `${config.API_BASE_URL}/initiateGoogleAuth?userID=${user._id}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "ngrok-skip-browser-warning": "true",
+                    },
+                }
             );
 
             if (!response.ok) {

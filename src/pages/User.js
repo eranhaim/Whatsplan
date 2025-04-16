@@ -57,7 +57,13 @@ export default function UserPage() {
 
             try {
                 const response = await fetch(
-                    `${config.API_BASE_URL}/getUser/${phoneNum}`
+                    `${config.API_BASE_URL}/getUser/${phoneNum}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "ngrok-skip-browser-warning": "true",
+                        },
+                    }
                 );
                 if (!response.ok) {
                     throw new Error("Failed to fetch user data");
@@ -71,7 +77,13 @@ export default function UserPage() {
                 setUser(userData);
 
                 const sessionResponse = await fetch(
-                    `${config.API_BASE_URL}/startOrLoadSession/${userData._id}`
+                    `${config.API_BASE_URL}/startOrLoadSession/${userData._id}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "ngrok-skip-browser-warning": "true",
+                        },
+                    }
                 );
                 if (!sessionResponse.ok) {
                     throw new Error("Failed to start session");
@@ -100,7 +112,13 @@ export default function UserPage() {
             setLoadingContacts(true);
             try {
                 const response = await fetch(
-                    `${config.API_BASE_URL}/getContacts/${user._id}`
+                    `${config.API_BASE_URL}/getContacts/${user._id}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "ngrok-skip-browser-warning": "true",
+                        },
+                    }
                 );
                 const data = await response.json();
 
@@ -128,6 +146,7 @@ export default function UserPage() {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        "ngrok-skip-browser-warning": "true",
                     },
                     body: JSON.stringify({
                         userID: user._id,
@@ -164,6 +183,7 @@ export default function UserPage() {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        "ngrok-skip-browser-warning": "true",
                     },
                     body: JSON.stringify({
                         userID: user._id,
@@ -194,6 +214,7 @@ export default function UserPage() {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        "ngrok-skip-browser-warning": "true",
                     },
                     body: JSON.stringify({
                         userID: user._id,
@@ -232,6 +253,7 @@ export default function UserPage() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true",
                 },
                 body: JSON.stringify(user),
             });
@@ -255,7 +277,13 @@ export default function UserPage() {
     const connectToGoogleCalendar = async () => {
         try {
             const response = await fetch(
-                `${config.API_BASE_URL}/initiateGoogleAuth?userID=${user._id}`
+                `${config.API_BASE_URL}/initiateGoogleAuth?userID=${user._id}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "ngrok-skip-browser-warning": "true",
+                    },
+                }
             );
             const data = await response.json();
             if (data.authUrl) {
@@ -276,6 +304,7 @@ export default function UserPage() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true",
                 },
                 body: JSON.stringify({
                     messageId,
@@ -331,6 +360,7 @@ export default function UserPage() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true",
                 },
                 body: JSON.stringify(updatedUser),
             });
