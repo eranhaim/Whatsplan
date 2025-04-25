@@ -20,7 +20,6 @@ export default function BotSettings({
     botSettings,
     onChangeSettings,
     onSaveSettings,
-    onConnectGoogleCalendar,
 }) {
     const { translations } = useLanguage();
 
@@ -140,24 +139,6 @@ export default function BotSettings({
                             }}
                         />
                     )}
-
-                    <Button
-                        variant="outlined"
-                        onClick={onConnectGoogleCalendar}
-                        sx={{
-                            borderColor: "#128C7E",
-                            color: "#128C7E",
-                            "&:hover": {
-                                borderColor: "#00A884",
-                                bgcolor: "rgba(0,168,132,0.04)",
-                                color: "#00A884",
-                            },
-                            py: 1.5,
-                            borderRadius: "50px",
-                        }}
-                    >
-                        {translations.connectGoogleCalendar}
-                    </Button>
 
                     <Button
                         variant="contained"

@@ -16,8 +16,6 @@ export default function SignUpPage() {
         email: "",
         password: "",
         phoneNum: "",
-        govID: "",
-        nationality: "",
     });
     const navigate = useNavigate();
 
@@ -50,12 +48,17 @@ export default function SignUpPage() {
     return (
         <Box
             sx={{
-                minHeight: "100vh",
+                height: "100vh",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-                py: 4,
+                overflow: "hidden",
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
             }}
         >
             <Container maxWidth="sm">
@@ -66,11 +69,6 @@ export default function SignUpPage() {
                         borderRadius: 2,
                         background: "white",
                         boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
-                        transform: "translateY(0)",
-                        transition: "transform 0.3s ease-in-out",
-                        "&:hover": {
-                            transform: "translateY(-5px)",
-                        },
                     }}
                 >
                     <Box
@@ -168,38 +166,6 @@ export default function SignUpPage() {
                                 setUser({ ...user, phoneNum: target.value })
                             }
                             value={user.phoneNum}
-                            fullWidth
-                            sx={{
-                                "& .MuiOutlinedInput-root": {
-                                    "&:hover fieldset": {
-                                        borderColor: "#128C7E",
-                                    },
-                                },
-                            }}
-                        />
-                        <TextField
-                            variant="outlined"
-                            label="Government ID"
-                            onChange={({ target }) =>
-                                setUser({ ...user, govID: target.value })
-                            }
-                            value={user.govID}
-                            fullWidth
-                            sx={{
-                                "& .MuiOutlinedInput-root": {
-                                    "&:hover fieldset": {
-                                        borderColor: "#128C7E",
-                                    },
-                                },
-                            }}
-                        />
-                        <TextField
-                            variant="outlined"
-                            label="Nationality"
-                            onChange={({ target }) =>
-                                setUser({ ...user, nationality: target.value })
-                            }
-                            value={user.nationality}
                             fullWidth
                             sx={{
                                 "& .MuiOutlinedInput-root": {

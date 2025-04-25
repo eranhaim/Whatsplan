@@ -12,6 +12,8 @@ import AuthError from "./pages/AuthError";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import { SnackbarProvider } from "./contexts/SnackbarContext";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 const theme = createTheme({
     palette: {
@@ -33,6 +35,14 @@ function App() {
                             <Route path="/" element={<LandingPage />} />
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/signup" element={<SignUpPage />} />
+                            <Route
+                                path="/forgot-password"
+                                element={<ForgotPassword />}
+                            />
+                            <Route
+                                path="/reset-password"
+                                element={<ResetPassword />}
+                            />
                             <Route
                                 path="/user/:phoneNum"
                                 element={<UserPage />}

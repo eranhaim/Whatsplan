@@ -8,7 +8,15 @@ const AuthSuccess = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            navigate("/dashboard"); // or wherever you want to redirect after successful auth
+            // Get the user's phone number from localStorage
+            const userData = localStorage.getItem("user");
+            if (userData) {
+                const user = JSON.parse(userData);
+                navigate(`/user/${user.phoneNum}`);
+            } else {
+                // Fallback to login if no user data found
+                navigate("/login");
+            }
         }, 2000);
 
         return () => clearTimeout(timer);

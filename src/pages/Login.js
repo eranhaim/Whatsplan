@@ -61,13 +61,18 @@ export default function LoginPage() {
             />
             <Box
                 sx={{
-                    minHeight: "100vh",
+                    height: "100vh",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     background:
                         "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-                    py: 4,
+                    overflow: "hidden",
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
                 }}
             >
                 <Container maxWidth="sm">
@@ -78,11 +83,6 @@ export default function LoginPage() {
                             borderRadius: 2,
                             background: "white",
                             boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
-                            transform: "translateY(0)",
-                            transition: "transform 0.3s ease-in-out",
-                            "&:hover": {
-                                transform: "translateY(-5px)",
-                            },
                         }}
                     >
                         <Box
@@ -168,6 +168,32 @@ export default function LoginPage() {
                                 }}
                             >
                                 {translations.login?.signIn || "Sign In"}
+                            </Button>
+                            <Button
+                                variant="text"
+                                onClick={() => navigate("/signup")}
+                                sx={{
+                                    color: "#128C7E",
+                                    "&:hover": {
+                                        bgcolor: "rgba(18, 140, 126, 0.04)",
+                                    },
+                                    textTransform: "none",
+                                }}
+                            >
+                                Don't have an account? Sign up
+                            </Button>
+                            <Button
+                                variant="text"
+                                onClick={() => navigate("/forgot-password")}
+                                sx={{
+                                    color: "#128C7E",
+                                    "&:hover": {
+                                        bgcolor: "rgba(18, 140, 126, 0.04)",
+                                    },
+                                    textTransform: "none",
+                                }}
+                            >
+                                Forgot Password?
                             </Button>
                         </Box>
                     </Paper>

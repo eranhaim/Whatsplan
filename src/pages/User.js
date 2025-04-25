@@ -236,7 +236,33 @@ export default function UserPage() {
         }
     };
 
-    const changeSettings = (id) => {
+    const changeSettings = async (id) => {
+        // If enabling Google Calendar integration
+        if (id === "3" && !user.settingsFlags?.includes(id)) {
+            // Initiate Google Calendar connection
+            try {
+                const response = await fetch(
+                    `${config.API_BASE_URL}/initiateGoogleAuth?userID=${user._id}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "ngrok-skip-browser-warning": "true",
+                        },
+                    }
+                );
+                const data = await response.json();
+                if (data.authUrl) {
+                    window.location.href = data.authUrl;
+                    return; // Don't update settings until auth is complete
+                }
+            } catch (error) {
+                console.error("Error initiating Google auth:", error);
+                showSnackbar("Failed to connect to Google Calendar", "error");
+                return;
+            }
+        }
+
+        // For all other settings or when disabling Google Calendar
         if (user.settingsFlags?.indexOf(id) === -1) {
             setUser({ ...user, settingsFlags: user.settingsFlags + id });
         } else {
@@ -271,26 +297,6 @@ export default function UserPage() {
                 translations.settingsError || "Error saving settings",
                 "error"
             );
-        }
-    };
-
-    const connectToGoogleCalendar = async () => {
-        try {
-            const response = await fetch(
-                `${config.API_BASE_URL}/initiateGoogleAuth?userID=${user._id}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "ngrok-skip-browser-warning": "true",
-                    },
-                }
-            );
-            const data = await response.json();
-            if (data.authUrl) {
-                window.location.href = data.authUrl;
-            }
-        } catch (error) {
-            console.error("Error initiating Google auth:", error);
         }
     };
 
@@ -474,7 +480,6 @@ export default function UserPage() {
                             botSettings={botSettings}
                             onChangeSettings={changeSettings}
                             onSaveSettings={saveSettings}
-                            onConnectGoogleCalendar={connectToGoogleCalendar}
                         />
                     </Grid>
                 </Grid>
