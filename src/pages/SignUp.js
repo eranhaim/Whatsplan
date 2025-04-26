@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import {
     Button,
     TextField,
@@ -6,9 +8,12 @@ import {
     Typography,
     Paper,
     Container,
+    Link,
+    Stack,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
+import LegalConsentDialogs from "../components/LegalConsentDialogs";
 
 export default function SignUpPage() {
     const [user, setUser] = useState({
@@ -17,9 +22,20 @@ export default function SignUpPage() {
         password: "",
         phoneNum: "",
     });
+    const [termsOpen, setTermsOpen] = useState(false);
+    const [privacyOpen, setPrivacyOpen] = useState(false);
+    const [termsAccepted, setTermsAccepted] = useState(false);
+    const [privacyAccepted, setPrivacyAccepted] = useState(false);
     const navigate = useNavigate();
 
     const handleSignUp = async () => {
+        if (!termsAccepted || !privacyAccepted) {
+            alert(
+                "Please accept both the Terms of Service and Privacy Policy to continue."
+            );
+            return;
+        }
+
         try {
             const response = await fetch(`${config.API_BASE_URL}/signup`, {
                 method: "POST",
@@ -43,6 +59,16 @@ export default function SignUpPage() {
             console.error("Sign up failed:", error);
             alert("Sign up failed. Please try again.");
         }
+    };
+
+    const handleTermsClick = (e) => {
+        e.preventDefault();
+        setTermsOpen(true);
+    };
+
+    const handlePrivacyClick = (e) => {
+        e.preventDefault();
+        setPrivacyOpen(true);
     };
 
     return (
@@ -103,6 +129,7 @@ export default function SignUpPage() {
 
                     <Box
                         component="form"
+                        onSubmit={(e) => e.preventDefault()}
                         sx={{
                             display: "flex",
                             flexDirection: "column",
@@ -112,6 +139,7 @@ export default function SignUpPage() {
                         <TextField
                             variant="outlined"
                             label="Name"
+                            autoComplete="off"
                             onChange={({ target }) =>
                                 setUser({ ...user, name: target.value })
                             }
@@ -129,6 +157,7 @@ export default function SignUpPage() {
                             variant="outlined"
                             label="Email"
                             type="email"
+                            autoComplete="off"
                             onChange={({ target }) =>
                                 setUser({ ...user, email: target.value })
                             }
@@ -146,6 +175,7 @@ export default function SignUpPage() {
                             variant="outlined"
                             label="Password"
                             type="password"
+                            autoComplete="new-password"
                             onChange={({ target }) =>
                                 setUser({ ...user, password: target.value })
                             }
@@ -159,56 +189,102 @@ export default function SignUpPage() {
                                 },
                             }}
                         />
-                        <TextField
-                            variant="outlined"
-                            label="Phone Number"
-                            onChange={({ target }) =>
-                                setUser({ ...user, phoneNum: target.value })
-                            }
+                        <PhoneInput
+                            country={"il"}
                             value={user.phoneNum}
-                            fullWidth
-                            sx={{
-                                "& .MuiOutlinedInput-root": {
-                                    "&:hover fieldset": {
-                                        borderColor: "#128C7E",
-                                    },
+                            onChange={(phone) =>
+                                setUser({ ...user, phoneNum: phone })
+                            }
+                            inputStyle={{
+                                width: "100%",
+                                height: "56px",
+                                fontSize: "16px",
+                                borderRadius: "4px",
+                                border: "1px solid rgba(0, 0, 0, 0.23)",
+                                "&:hover": {
+                                    borderColor: "#128C7E",
                                 },
+                            }}
+                            containerStyle={{
+                                width: "100%",
+                            }}
+                            buttonStyle={{
+                                border: "1px solid rgba(0, 0, 0, 0.23)",
+                                borderRight: "none",
+                                borderRadius: "4px 0 0 4px",
+                                backgroundColor: "transparent",
                             }}
                         />
-                        <Button
-                            variant="contained"
-                            onClick={handleSignUp}
-                            sx={{
-                                bgcolor: "#128C7E",
-                                color: "white",
-                                "&:hover": {
-                                    bgcolor: "#00A884",
-                                },
-                                py: 1.5,
-                                fontSize: "1.1rem",
-                                borderRadius: "50px",
-                                textTransform: "none",
-                                mt: 2,
-                            }}
-                        >
-                            Sign Up
-                        </Button>
-                        <Button
-                            variant="text"
-                            onClick={() => navigate("/login")}
-                            sx={{
-                                color: "#128C7E",
-                                "&:hover": {
-                                    bgcolor: "rgba(18, 140, 126, 0.04)",
-                                },
-                                textTransform: "none",
-                            }}
-                        >
-                            Already have an account? Log in
-                        </Button>
+
+                        <Stack spacing={1} sx={{ mt: 2 }}>
+                            <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                align="center"
+                            >
+                                By signing up, you agree to our{" "}
+                                <Link
+                                    component="button"
+                                    variant="body2"
+                                    onClick={handleTermsClick}
+                                    sx={{ fontWeight: "medium" }}
+                                >
+                                    Terms of Service
+                                </Link>{" "}
+                                and{" "}
+                                <Link
+                                    component="button"
+                                    variant="body2"
+                                    onClick={handlePrivacyClick}
+                                    sx={{ fontWeight: "medium" }}
+                                >
+                                    Privacy Policy
+                                </Link>
+                            </Typography>
+
+                            <Button
+                                variant="contained"
+                                onClick={handleSignUp}
+                                sx={{
+                                    bgcolor: "#128C7E",
+                                    color: "white",
+                                    "&:hover": {
+                                        bgcolor: "#00A884",
+                                    },
+                                    py: 1.5,
+                                    fontSize: "1.1rem",
+                                    borderRadius: "50px",
+                                    textTransform: "none",
+                                }}
+                            >
+                                Sign Up
+                            </Button>
+
+                            <Button
+                                variant="text"
+                                onClick={() => navigate("/login")}
+                                sx={{
+                                    color: "#128C7E",
+                                    textTransform: "none",
+                                }}
+                            >
+                                Already have an account? Log in
+                            </Button>
+                        </Stack>
                     </Box>
                 </Paper>
             </Container>
+
+            <LegalConsentDialogs
+                termsOpen={termsOpen}
+                privacyOpen={privacyOpen}
+                termsAccepted={termsAccepted}
+                privacyAccepted={privacyAccepted}
+                handleTermsClose={() => setTermsOpen(false)}
+                handlePrivacyClose={() => setPrivacyOpen(false)}
+                handleTermsAccept={setTermsAccepted}
+                handlePrivacyAccept={setPrivacyAccepted}
+            />
         </Box>
     );
 }

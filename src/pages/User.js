@@ -75,6 +75,8 @@ export default function UserPage() {
                 }
 
                 setUser(userData);
+                // Update localStorage with latest user data
+                localStorage.setItem("user", JSON.stringify(userData));
 
                 const sessionResponse = await fetch(
                     `${config.API_BASE_URL}/startOrLoadSession/${userData._id}`,
@@ -104,6 +106,28 @@ export default function UserPage() {
 
         fetchUser();
     }, [phoneNum]);
+
+    // Keep localStorage in sync with user state changes
+    useEffect(() => {
+        if (user) {
+            localStorage.setItem("user", JSON.stringify(user));
+        }
+    }, [user]);
+
+    // Listen for language changes
+    useEffect(() => {
+        const handleLanguageChange = (event) => {
+            setUser(event.detail);
+        };
+
+        window.addEventListener("userLanguageChanged", handleLanguageChange);
+        return () => {
+            window.removeEventListener(
+                "userLanguageChanged",
+                handleLanguageChange
+            );
+        };
+    }, []);
 
     useEffect(() => {
         const fetchContacts = async () => {
@@ -281,7 +305,11 @@ export default function UserPage() {
                     "Content-Type": "application/json",
                     "ngrok-skip-browser-warning": "true",
                 },
-                body: JSON.stringify(user),
+                body: JSON.stringify({
+                    _id: user._id,
+                    settingsFlags: user.settingsFlags,
+                    settings: user.settings,
+                }),
             });
             const data = await response.json();
             if (data.success) {
@@ -355,12 +383,9 @@ export default function UserPage() {
 
     const handleDeleteMessage = async (messageId) => {
         try {
-            const updatedUser = {
-                ...user,
-                scheduledMessages: user.scheduledMessages.filter(
-                    (msg) => msg.id !== messageId
-                ),
-            };
+            const updatedMessages = user.scheduledMessages.filter(
+                (msg) => msg.id !== messageId
+            );
 
             const response = await fetch(`${config.API_BASE_URL}/editUser`, {
                 method: "POST",
@@ -368,12 +393,15 @@ export default function UserPage() {
                     "Content-Type": "application/json",
                     "ngrok-skip-browser-warning": "true",
                 },
-                body: JSON.stringify(updatedUser),
+                body: JSON.stringify({
+                    _id: user._id,
+                    scheduledMessages: updatedMessages,
+                }),
             });
 
             const data = await response.json();
             if (data.success) {
-                setUser(updatedUser);
+                setUser({ ...user, scheduledMessages: updatedMessages });
                 showSnackbar(translations.messageDeleted, "success");
             } else {
                 throw new Error(data.error);

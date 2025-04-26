@@ -14,6 +14,8 @@ import LanguageSwitcher from "./components/LanguageSwitcher";
 import { SnackbarProvider } from "./contexts/SnackbarContext";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 const theme = createTheme({
     palette: {
@@ -52,6 +54,14 @@ function App() {
                                 element={<AuthSuccess />}
                             />
                             <Route path="/auth-error" element={<AuthError />} />
+                            <Route
+                                path="/privacy-policy"
+                                element={<PrivacyPolicy />}
+                            />
+                            <Route
+                                path="/terms-of-service"
+                                element={<TermsOfService />}
+                            />
                         </Routes>
                     </Router>
                 </ThemeProvider>

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import {
     Button,
     TextField,
@@ -32,6 +34,7 @@ export default function LoginPage() {
             const data = await response.json();
             if (data.success) {
                 setUser(data.user);
+                localStorage.setItem("user", JSON.stringify(data.user));
                 if (data.needsGoogleAuth) {
                     setShowGoogleAuth(true);
                 } else {
@@ -114,31 +117,39 @@ export default function LoginPage() {
                                 gap: 3,
                             }}
                         >
-                            <TextField
-                                variant="outlined"
-                                label={
-                                    translations.login?.phoneNumber ||
-                                    "Phone Number"
-                                }
-                                onChange={({ target }) =>
-                                    setUser({ ...user, phoneNum: target.value })
-                                }
+                            <PhoneInput
+                                country={"il"}
                                 value={user?.phoneNum || ""}
-                                fullWidth
-                                sx={{
-                                    "& .MuiOutlinedInput-root": {
-                                        "&:hover fieldset": {
-                                            borderColor: "#128C7E",
-                                        },
+                                onChange={(phone) =>
+                                    setUser({ ...user, phoneNum: phone })
+                                }
+                                inputStyle={{
+                                    width: "100%",
+                                    height: "56px",
+                                    fontSize: "16px",
+                                    borderRadius: "4px",
+                                    border: "1px solid rgba(0, 0, 0, 0.23)",
+                                    "&:hover": {
+                                        borderColor: "#128C7E",
                                     },
+                                }}
+                                containerStyle={{
+                                    width: "100%",
+                                }}
+                                buttonStyle={{
+                                    border: "1px solid rgba(0, 0, 0, 0.23)",
+                                    borderRight: "none",
+                                    borderRadius: "4px 0 0 4px",
+                                    backgroundColor: "transparent",
                                 }}
                             />
                             <TextField
                                 variant="outlined"
-                                label={
+                                placeholder={
                                     translations.login?.password || "Password"
                                 }
                                 type="password"
+                                name="current-password"
                                 onChange={({ target }) =>
                                     setUser({ ...user, password: target.value })
                                 }
