@@ -34,6 +34,13 @@ const en = {
     minutesBeforeEvent: "Minutes before event for notification",
     connectGoogleCalendar: "Connect with Google Calendar",
     saveSettings: "Save Settings",
+    selectGroupExceptions: "Select Group Exceptions",
+    selectGroups: "Select Groups",
+    loadingGroups: "Loading groups...",
+    noGroups: "No groups found",
+    saveGroups: "Save Groups",
+    settingsSaved: "Settings saved successfully",
+    settingsError: "Error saving settings",
 
     // Schedule Message
     scheduleMessage: "Schedule Message",

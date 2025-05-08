@@ -5,7 +5,7 @@ const ru = {
     save: "Сохранить",
     cancel: "Отмена",
     error: "Ошибка",
-    success: "Успех",
+    success: "Успешно",
     loading: "Загрузка...",
 
     // Login Page
@@ -18,7 +18,7 @@ const ru = {
     name: "Имя",
     email: "Электронная почта",
     govID: "Государственный ID",
-    nationality: "Национальность",
+    nationality: "Гражданство",
     userExists: "Пользователь уже существует",
     signupFailed: "Ошибка регистрации",
 
@@ -27,20 +27,27 @@ const ru = {
     getWeeklyUpdate: "Получить еженедельное обновление сейчас",
     getDailyUpdate: "Получить ежедневное обновление",
     getMonthlyEvents: "Получить ежемесячные события",
-    weeklySummary: "Получать еженедельный обзор по воскресеньям",
+    weeklySummary: "Получать еженедельную сводку в воскресенье",
     dailyUpdate: "Получать ежедневное обновление каждое утро",
-    googleCalendar: "Планировать события в Google Calendar",
+    googleCalendar: "Планировать события в Google Календаре",
     eventNotifications: "Получать уведомления перед событиями",
     minutesBeforeEvent: "Минут до события для уведомления",
-    connectGoogleCalendar: "Подключить Google Calendar",
+    connectGoogleCalendar: "Подключиться к Google Календарю",
     saveSettings: "Сохранить настройки",
+    selectGroupExceptions: "Выбрать исключения групп",
+    selectGroups: "Выбрать группы",
+    loadingGroups: "Загрузка групп...",
+    noGroups: "Группы не найдены",
+    saveGroups: "Сохранить группы",
+    settingsSaved: "Настройки успешно сохранены",
+    settingsError: "Ошибка сохранения настроек",
 
     // Schedule Message
     scheduleMessage: "Запланировать сообщение",
     selectContacts: "Выбрать контакты",
     scheduleDateTime: "Дата и время",
     message: "Сообщение",
-    participants: "участников",
+    participants: "участники",
     once: "Один раз",
     daily: "Ежедневно",
     weekly: "Еженедельно",
@@ -48,7 +55,7 @@ const ru = {
     loadingContacts: "Загрузка контактов...",
     noContacts: "Нет доступных контактов",
     messageScheduled: "Сообщение успешно запланировано",
-    scheduleError: "Ошибка при планировании сообщения",
+    scheduleError: "Ошибка планирования сообщения",
 
     // Scheduled Messages Dialog
     viewScheduledMessages: "Просмотр запланированных сообщений",
@@ -58,17 +65,17 @@ const ru = {
     frequency: "Частота",
     close: "Закрыть",
     messageDeleted: "Сообщение успешно удалено",
-    deleteError: "Ошибка при удалении сообщения",
+    deleteError: "Ошибка удаления сообщения",
     editMessage: "Редактировать сообщение",
     editScheduledMessage: "Редактировать запланированное сообщение",
     messageEdited: "Сообщение успешно отредактировано",
-    editError: "Ошибка при редактировании сообщения",
+    editError: "Ошибка редактирования сообщения",
 
     // Auth Pages
-    authSuccess: "Успешно подключено к Google Calendar!",
+    authSuccess: "Успешно подключено к Google Календарю!",
     redirecting: "Перенаправление обратно в приложение...",
-    authError: "Ошибка подключения к Google Calendar",
-    tryAgainLater: "Вы можете попробовать позже в настройках аккаунта",
+    authError: "Ошибка подключения к Google Календарю",
+    tryAgainLater: "Вы можете попробовать снова позже в настройках аккаунта",
     returnToDashboard: "Вернуться в панель управления",
 
     // Landing Page

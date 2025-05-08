@@ -34,6 +34,13 @@ const es = {
     minutesBeforeEvent: "Minutos antes del evento para notificación",
     connectGoogleCalendar: "Conectar con Google Calendar",
     saveSettings: "Guardar Configuración",
+    selectGroupExceptions: "Seleccionar Excepciones de Grupos",
+    selectGroups: "Seleccionar Grupos",
+    loadingGroups: "Cargando grupos...",
+    noGroups: "No se encontraron grupos",
+    saveGroups: "Guardar Grupos",
+    settingsSaved: "Configuración guardada exitosamente",
+    settingsError: "Error al guardar la configuración",
 
     // Schedule Message
     scheduleMessage: "Programar Mensaje",
@@ -66,11 +73,11 @@ const es = {
 
     // Auth Pages
     authSuccess: "¡Conectado exitosamente con Google Calendar!",
-    redirecting: "Redirigiendo a la aplicación...",
+    redirecting: "Redirigiendo de vuelta a la aplicación...",
     authError: "Error al conectar con Google Calendar",
     tryAgainLater:
-        "Puede intentarlo más tarde desde la configuración de su cuenta",
-    returnToDashboard: "Volver al Panel de Control",
+        "Puede intentarlo nuevamente más tarde desde la configuración de su cuenta",
+    returnToDashboard: "Volver al Panel Principal",
 
     // Landing Page
     welcome: "Bienvenido a WhatsPlan",

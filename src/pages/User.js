@@ -383,9 +383,9 @@ export default function UserPage() {
                     sx={{
                         display: "flex",
                         flexDirection: "row",
-                        flexWrap: { xs: "wrap", md: "nowrap" },
+                        flexWrap: "wrap",
                         justifyContent: "center",
-                        alignItems: "flex-start",
+                        alignItems: "stretch",
                         gap: { xs: 2, md: 3 },
                         width: "100%",
                         pb: 2,
@@ -394,12 +394,13 @@ export default function UserPage() {
                     <Grid
                         item
                         xs={12}
-                        md="auto"
+                        sm={4}
                         sx={{
-                            flex: { md: 1 },
+                            flex: { sm: 1 },
                             width: "100%",
-                            minWidth: { md: "300px" },
-                            maxWidth: { xs: "100%", md: "400px" },
+                            maxWidth: { xs: "100%", sm: "100%", md: "400px" },
+                            display: "flex",
+                            flexDirection: "column",
                         }}
                     >
                         <UserProfile
@@ -418,12 +419,13 @@ export default function UserPage() {
                     <Grid
                         item
                         xs={12}
-                        md="auto"
+                        sm={4}
                         sx={{
-                            flex: { md: 1 },
+                            flex: { sm: 1 },
                             width: "100%",
-                            minWidth: { md: "300px" },
-                            maxWidth: { xs: "100%", md: "400px" },
+                            maxWidth: { xs: "100%", sm: "100%", md: "400px" },
+                            display: "flex",
+                            flexDirection: "column",
                         }}
                     >
                         <GroupSelector
@@ -439,12 +441,13 @@ export default function UserPage() {
                     <Grid
                         item
                         xs={12}
-                        md="auto"
+                        sm={4}
                         sx={{
-                            flex: { md: 1 },
+                            flex: { sm: 1 },
                             width: "100%",
-                            minWidth: { md: "300px" },
-                            maxWidth: { xs: "100%", md: "400px" },
+                            maxWidth: { xs: "100%", sm: "100%", md: "400px" },
+                            display: "flex",
+                            flexDirection: "column",
                         }}
                     >
                         <BotSettings
