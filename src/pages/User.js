@@ -1,13 +1,13 @@
 import { Update, CalendarToday, Notifications } from "@mui/icons-material";
-import { Box, Container, Grid } from "@mui/material";
+import { Box, Container, Grid, useTheme, useMediaQuery } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import config from "../config";
 import { useLanguage } from "../contexts/LanguageContext";
 import UserProfile from "../components/UserPage/UserProfile";
-import MessageScheduler from "../components/UserPage/MessageScheduler";
 import BotSettings from "../components/UserPage/BotSettings";
 import { useSnackbar } from "../contexts/SnackbarContext";
+import GroupSelector from "../components/UserPage/GroupSelector";
 
 export default function UserPage() {
     const [user, setUser] = useState(null);
@@ -15,16 +15,15 @@ export default function UserPage() {
     const [isInSession, setIsInSession] = useState(false);
     const { phoneNum } = useParams();
     const { translations } = useLanguage();
-    const [selectedContacts, setSelectedContacts] = useState([]);
-    const [scheduleDate, setScheduleDate] = useState(new Date());
-    const [scheduleType, setScheduleType] = useState("once");
-    const [scheduleMessage, setScheduleMessage] = useState("");
-    const [contacts, setContacts] = useState([]);
-    const [loadingContacts, setLoadingContacts] = useState(false);
     const [loadingWeeklyUpdate, setLoadingWeeklyUpdate] = useState(false);
     const [loadingDailyUpdate, setLoadingDailyUpdate] = useState(false);
     const [loadingMonthlyEvents, setLoadingMonthlyEvents] = useState(false);
     const { showSnackbar } = useSnackbar();
+    const [groups, setGroups] = useState([]);
+    const [loadingGroups, setLoadingGroups] = useState(false);
+    const [selectedGroups, setSelectedGroups] = useState([]);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
     const botSettings = [
         {
@@ -130,13 +129,12 @@ export default function UserPage() {
     }, []);
 
     useEffect(() => {
-        const fetchContacts = async () => {
+        const fetchGroups = async () => {
             if (!user?._id) return;
-
-            setLoadingContacts(true);
+            setLoadingGroups(true);
             try {
                 const response = await fetch(
-                    `${config.API_BASE_URL}/getContacts/${user._id}`,
+                    `${config.API_BASE_URL}/getGroupChats/${user._id}`,
                     {
                         method: "GET",
                         headers: {
@@ -145,21 +143,25 @@ export default function UserPage() {
                     }
                 );
                 const data = await response.json();
-
                 if (data.success) {
-                    setContacts(data.contacts);
+                    setGroups(data.groups);
                 } else {
-                    console.error("Failed to fetch contacts:", data.error);
+                    console.error("Failed to fetch groups:", data.error);
                 }
             } catch (error) {
-                console.error("Error fetching contacts:", error);
+                console.error("Error fetching groups:", error);
             } finally {
-                setLoadingContacts(false);
+                setLoadingGroups(false);
             }
         };
-
-        fetchContacts();
+        fetchGroups();
     }, [user?._id]);
+
+    useEffect(() => {
+        if (user?.groupChatExceptions) {
+            setSelectedGroups(user.groupChatExceptions);
+        }
+    }, [user]);
 
     const getSummery = async () => {
         setLoadingWeeklyUpdate(true);
@@ -328,65 +330,8 @@ export default function UserPage() {
         }
     };
 
-    const handleScheduleSubmit = async (messageId) => {
+    const saveGroupExceptions = async () => {
         try {
-            const endpoint = messageId
-                ? `${config.API_BASE_URL}/editScheduledMessage`
-                : `${config.API_BASE_URL}/scheduleMessage`;
-
-            const response = await fetch(endpoint, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "ngrok-skip-browser-warning": "true",
-                },
-                body: JSON.stringify({
-                    messageId,
-                    userID: user._id,
-                    contacts: selectedContacts.map((id) => {
-                        const contact = contacts.find((c) => c.id === id);
-                        return {
-                            id: contact.id,
-                            name: contact.name,
-                            isGroup: contact.isGroup,
-                        };
-                    }),
-                    dateTime: scheduleDate.toISOString(),
-                    message: scheduleMessage,
-                    frequency: scheduleType,
-                }),
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                setSelectedContacts([]);
-                setScheduleDate(new Date());
-                setScheduleType("once");
-                setScheduleMessage("");
-                showSnackbar(
-                    messageId
-                        ? translations.messageEdited
-                        : translations.messageScheduled,
-                    "success"
-                );
-            } else {
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            console.error("Error scheduling message:", error);
-            showSnackbar(
-                messageId ? translations.editError : translations.scheduleError,
-                "error"
-            );
-        }
-    };
-
-    const handleDeleteMessage = async (messageId) => {
-        try {
-            const updatedMessages = user.scheduledMessages.filter(
-                (msg) => msg.id !== messageId
-            );
-
             const response = await fetch(`${config.API_BASE_URL}/editUser`, {
                 method: "POST",
                 headers: {
@@ -395,29 +340,32 @@ export default function UserPage() {
                 },
                 body: JSON.stringify({
                     _id: user._id,
-                    scheduledMessages: updatedMessages,
+                    groupChatExceptions: selectedGroups,
                 }),
             });
-
             const data = await response.json();
             if (data.success) {
-                setUser({ ...user, scheduledMessages: updatedMessages });
-                showSnackbar(translations.messageDeleted, "success");
-            } else {
-                throw new Error(data.error);
+                setUser({ ...user, groupChatExceptions: selectedGroups });
+                showSnackbar(
+                    translations.settingsSaved || "Settings saved successfully",
+                    "success"
+                );
             }
         } catch (error) {
-            console.error("Error deleting message:", error);
-            showSnackbar(translations.deleteError, "error");
+            console.error("Error saving group exceptions:", error);
+            showSnackbar(
+                translations.settingsError || "Error saving settings",
+                "error"
+            );
         }
     };
 
     return (
         <Box
             sx={{
-                height: "100vh",
+                minHeight: "100vh",
                 background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-                p: 3,
+                p: { xs: 1, sm: 2, md: 3 },
                 boxSizing: "border-box",
                 overflow: "auto",
             }}
@@ -425,35 +373,33 @@ export default function UserPage() {
             <Container
                 maxWidth="lg"
                 sx={{
-                    height: "100%",
-                    maxHeight: "calc(100vh - 48px)",
                     width: "100%",
-                    px: 2,
+                    px: { xs: 1, sm: 2 },
                 }}
             >
                 <Grid
                     container
-                    spacing={3}
+                    spacing={{ xs: 2, md: 3 }}
                     sx={{
                         display: "flex",
                         flexDirection: "row",
-                        flexWrap: "nowrap",
+                        flexWrap: { xs: "wrap", md: "nowrap" },
                         justifyContent: "center",
                         alignItems: "flex-start",
-                        gap: 3,
+                        gap: { xs: 2, md: 3 },
                         width: "100%",
-                        height: "100%",
-                        maxHeight: "100%",
-                        overflowX: "auto",
                         pb: 2,
                     }}
                 >
                     <Grid
                         item
+                        xs={12}
+                        md="auto"
                         sx={{
-                            flex: 1,
-                            minWidth: "320px",
-                            maxWidth: "400px",
+                            flex: { md: 1 },
+                            width: "100%",
+                            minWidth: { md: "300px" },
+                            maxWidth: { xs: "100%", md: "400px" },
                         }}
                     >
                         <UserProfile
@@ -471,35 +417,34 @@ export default function UserPage() {
 
                     <Grid
                         item
+                        xs={12}
+                        md="auto"
                         sx={{
-                            flex: 1,
-                            minWidth: "320px",
-                            maxWidth: "400px",
+                            flex: { md: 1 },
+                            width: "100%",
+                            minWidth: { md: "300px" },
+                            maxWidth: { xs: "100%", md: "400px" },
                         }}
                     >
-                        <MessageScheduler
-                            contacts={contacts}
-                            loadingContacts={loadingContacts}
-                            selectedContacts={selectedContacts}
-                            setSelectedContacts={setSelectedContacts}
-                            scheduleDate={scheduleDate}
-                            setScheduleDate={setScheduleDate}
-                            scheduleType={scheduleType}
-                            setScheduleType={setScheduleType}
-                            scheduleMessage={scheduleMessage}
-                            setScheduleMessage={setScheduleMessage}
-                            onScheduleSubmit={handleScheduleSubmit}
-                            user={user}
-                            onDeleteMessage={handleDeleteMessage}
+                        <GroupSelector
+                            groups={groups}
+                            loadingGroups={loadingGroups}
+                            selectedGroups={selectedGroups}
+                            setSelectedGroups={setSelectedGroups}
+                            onSave={saveGroupExceptions}
+                            translations={translations}
                         />
                     </Grid>
 
                     <Grid
                         item
+                        xs={12}
+                        md="auto"
                         sx={{
-                            flex: 1,
-                            minWidth: "320px",
-                            maxWidth: "400px",
+                            flex: { md: 1 },
+                            width: "100%",
+                            minWidth: { md: "300px" },
+                            maxWidth: { xs: "100%", md: "400px" },
                         }}
                     >
                         <BotSettings

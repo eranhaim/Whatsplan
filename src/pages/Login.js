@@ -8,6 +8,8 @@ import {
     Typography,
     Paper,
     Container,
+    useMediaQuery,
+    useTheme,
 } from "@mui/material";
 import GoogleAuthDialog from "../components/googleAuthDialog";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +21,8 @@ export default function LoginPage() {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
     const { translations } = useLanguage();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     const handleLogin = async (credentials) => {
         try {
@@ -64,28 +68,31 @@ export default function LoginPage() {
             />
             <Box
                 sx={{
-                    height: "100vh",
+                    minHeight: "100vh",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     background:
                         "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-                    overflow: "hidden",
+                    overflow: "auto",
                     position: "fixed",
                     top: 0,
                     left: 0,
                     right: 0,
                     bottom: 0,
+                    px: { xs: 2, sm: 3 },
+                    py: { xs: 4, sm: 0 },
                 }}
             >
-                <Container maxWidth="sm">
+                <Container maxWidth="sm" sx={{ width: "100%" }}>
                     <Paper
                         elevation={3}
                         sx={{
-                            p: 4,
+                            p: { xs: 3, sm: 4 },
                             borderRadius: 2,
                             background: "white",
                             boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
+                            width: "100%",
                         }}
                     >
                         <Box
@@ -93,11 +100,11 @@ export default function LoginPage() {
                                 display: "flex",
                                 flexDirection: "column",
                                 alignItems: "center",
-                                mb: 4,
+                                mb: { xs: 3, sm: 4 },
                             }}
                         >
                             <Typography
-                                variant="h4"
+                                variant={isMobile ? "h5" : "h4"}
                                 component="h1"
                                 sx={{
                                     fontWeight: "bold",
@@ -114,7 +121,8 @@ export default function LoginPage() {
                             sx={{
                                 display: "flex",
                                 flexDirection: "column",
-                                gap: 3,
+                                gap: { xs: 2, sm: 3 },
+                                width: "100%",
                             }}
                         >
                             <PhoneInput
@@ -125,13 +133,10 @@ export default function LoginPage() {
                                 }
                                 inputStyle={{
                                     width: "100%",
-                                    height: "56px",
-                                    fontSize: "16px",
+                                    height: isMobile ? "50px" : "56px",
+                                    fontSize: isMobile ? "14px" : "16px",
                                     borderRadius: "4px",
                                     border: "1px solid rgba(0, 0, 0, 0.23)",
-                                    "&:hover": {
-                                        borderColor: "#128C7E",
-                                    },
                                 }}
                                 containerStyle={{
                                     width: "100%",
@@ -157,6 +162,7 @@ export default function LoginPage() {
                                 fullWidth
                                 sx={{
                                     "& .MuiOutlinedInput-root": {
+                                        height: isMobile ? "50px" : "56px",
                                         "&:hover fieldset": {
                                             borderColor: "#128C7E",
                                         },
@@ -171,11 +177,11 @@ export default function LoginPage() {
                                     "&:hover": {
                                         bgcolor: "#00A884",
                                     },
-                                    py: 1.5,
-                                    fontSize: "1.1rem",
+                                    py: { xs: 1, sm: 1.5 },
+                                    fontSize: { xs: "1rem", sm: "1.1rem" },
                                     borderRadius: "50px",
                                     textTransform: "none",
-                                    mt: 2,
+                                    mt: { xs: 1, sm: 2 },
                                 }}
                             >
                                 {translations.login?.signIn || "Sign In"}
@@ -189,6 +195,7 @@ export default function LoginPage() {
                                         bgcolor: "rgba(18, 140, 126, 0.04)",
                                     },
                                     textTransform: "none",
+                                    py: { xs: 0.5, sm: 1 },
                                 }}
                             >
                                 Don't have an account? Sign up
@@ -202,6 +209,7 @@ export default function LoginPage() {
                                         bgcolor: "rgba(18, 140, 126, 0.04)",
                                     },
                                     textTransform: "none",
+                                    py: { xs: 0.5, sm: 1 },
                                 }}
                             >
                                 Forgot Password?

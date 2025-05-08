@@ -10,6 +10,8 @@ import {
     Container,
     Link,
     Stack,
+    useMediaQuery,
+    useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
@@ -27,6 +29,8 @@ export default function SignUpPage() {
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [privacyAccepted, setPrivacyAccepted] = useState(false);
     const navigate = useNavigate();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     const handleSignUp = async () => {
         if (!termsAccepted || !privacyAccepted) {
@@ -74,27 +78,30 @@ export default function SignUpPage() {
     return (
         <Box
             sx={{
-                height: "100vh",
+                minHeight: "100vh",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-                overflow: "hidden",
+                overflow: "auto",
                 position: "fixed",
                 top: 0,
                 left: 0,
                 right: 0,
                 bottom: 0,
+                px: { xs: 2, sm: 3 },
+                py: { xs: 4, sm: 0 },
             }}
         >
-            <Container maxWidth="sm">
+            <Container maxWidth="sm" sx={{ width: "100%" }}>
                 <Paper
                     elevation={3}
                     sx={{
-                        p: 4,
+                        p: { xs: 3, sm: 4 },
                         borderRadius: 2,
                         background: "white",
                         boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
+                        width: "100%",
                     }}
                 >
                     <Box
@@ -102,16 +109,16 @@ export default function SignUpPage() {
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
-                            mb: 4,
+                            mb: { xs: 2, sm: 4 },
                         }}
                     >
                         <Typography
-                            variant="h4"
+                            variant={isMobile ? "h5" : "h4"}
                             component="h1"
                             sx={{
                                 fontWeight: "bold",
                                 color: "#128C7E",
-                                mb: 2,
+                                mb: { xs: 1, sm: 2 },
                             }}
                         >
                             WhatsPlan
@@ -133,7 +140,8 @@ export default function SignUpPage() {
                         sx={{
                             display: "flex",
                             flexDirection: "column",
-                            gap: 3,
+                            gap: { xs: 2, sm: 3 },
+                            width: "100%",
                         }}
                     >
                         <TextField
@@ -147,6 +155,7 @@ export default function SignUpPage() {
                             fullWidth
                             sx={{
                                 "& .MuiOutlinedInput-root": {
+                                    height: isMobile ? "50px" : "56px",
                                     "&:hover fieldset": {
                                         borderColor: "#128C7E",
                                     },
@@ -165,6 +174,7 @@ export default function SignUpPage() {
                             fullWidth
                             sx={{
                                 "& .MuiOutlinedInput-root": {
+                                    height: isMobile ? "50px" : "56px",
                                     "&:hover fieldset": {
                                         borderColor: "#128C7E",
                                     },
@@ -183,6 +193,7 @@ export default function SignUpPage() {
                             fullWidth
                             sx={{
                                 "& .MuiOutlinedInput-root": {
+                                    height: isMobile ? "50px" : "56px",
                                     "&:hover fieldset": {
                                         borderColor: "#128C7E",
                                     },
@@ -197,13 +208,10 @@ export default function SignUpPage() {
                             }
                             inputStyle={{
                                 width: "100%",
-                                height: "56px",
-                                fontSize: "16px",
+                                height: isMobile ? "50px" : "56px",
+                                fontSize: isMobile ? "14px" : "16px",
                                 borderRadius: "4px",
                                 border: "1px solid rgba(0, 0, 0, 0.23)",
-                                "&:hover": {
-                                    borderColor: "#128C7E",
-                                },
                             }}
                             containerStyle={{
                                 width: "100%",
@@ -216,11 +224,12 @@ export default function SignUpPage() {
                             }}
                         />
 
-                        <Stack spacing={1} sx={{ mt: 2 }}>
+                        <Stack spacing={1} sx={{ mt: { xs: 1, sm: 2 } }}>
                             <Typography
                                 variant="body2"
                                 color="text.secondary"
                                 align="center"
+                                sx={{ fontSize: isMobile ? "12px" : "14px" }}
                             >
                                 By signing up, you agree to our{" "}
                                 <Link
@@ -251,10 +260,11 @@ export default function SignUpPage() {
                                     "&:hover": {
                                         bgcolor: "#00A884",
                                     },
-                                    py: 1.5,
-                                    fontSize: "1.1rem",
+                                    py: { xs: 1, sm: 1.5 },
+                                    fontSize: { xs: "1rem", sm: "1.1rem" },
                                     borderRadius: "50px",
                                     textTransform: "none",
+                                    mt: { xs: 1, sm: 2 },
                                 }}
                             >
                                 Sign Up
@@ -266,6 +276,8 @@ export default function SignUpPage() {
                                 sx={{
                                     color: "#128C7E",
                                     textTransform: "none",
+                                    py: { xs: 0.5, sm: 1 },
+                                    fontSize: { xs: "14px", sm: "16px" },
                                 }}
                             >
                                 Already have an account? Log in
