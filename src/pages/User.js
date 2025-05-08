@@ -1,5 +1,5 @@
 import { Update, CalendarToday, Notifications } from "@mui/icons-material";
-import { Box, Container, Grid, useTheme, useMediaQuery } from "@mui/material";
+import { Box, Container, Grid } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import config from "../config";
@@ -22,8 +22,6 @@ export default function UserPage() {
     const [groups, setGroups] = useState([]);
     const [loadingGroups, setLoadingGroups] = useState(false);
     const [selectedGroups, setSelectedGroups] = useState([]);
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
     const botSettings = [
         {

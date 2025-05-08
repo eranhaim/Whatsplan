@@ -16,7 +16,6 @@ import {
     Divider,
 } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 
 export default function GroupSelector({
     groups = [],
