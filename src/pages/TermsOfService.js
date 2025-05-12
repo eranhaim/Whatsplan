@@ -1,79 +1,69 @@
 import React from "react";
 import { Container, Typography, Box } from "@mui/material";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const TermsOfService = () => {
+    const { translations } = useLanguage();
+
     return (
         <Container maxWidth="md">
             <Box py={4}>
                 <Typography variant="h3" component="h1" gutterBottom>
-                    Terms of Service
+                    {translations.termsOfService}
                 </Typography>
 
                 <Typography variant="body1" paragraph>
-                    Last updated: {new Date().toLocaleDateString()}
-                </Typography>
-
-                <Typography variant="h5" gutterBottom>
-                    1. Acceptance of Terms
-                </Typography>
-                <Typography variant="body1" paragraph>
-                    By accessing and using WhatsPlan, you accept and agree to be
-                    bound by the terms and conditions of this agreement.
+                    {translations.lastUpdated}:{" "}
+                    {new Date().toLocaleDateString()}
                 </Typography>
 
                 <Typography variant="h5" gutterBottom>
-                    2. Description of Service
+                    {translations.acceptanceOfTerms}
                 </Typography>
                 <Typography variant="body1" paragraph>
-                    WhatsPlan is a scheduling automation service that integrates
-                    with Google Calendar and Gmail to help users manage their
-                    appointments and communications more efficiently.
+                    {translations.acceptanceOfTermsText}
                 </Typography>
 
                 <Typography variant="h5" gutterBottom>
-                    3. Google API Services User Data Policy
+                    {translations.descriptionOfService}
                 </Typography>
                 <Typography variant="body1" paragraph>
-                    Our application adheres to the Google API Services User Data
-                    Policy, including the Limited Use requirements. We access,
-                    use, and transfer user data only for the purposes that are
-                    permitted by our users, and we provide a privacy policy and
-                    terms of service that clearly describe how we use the data.
+                    {translations.descriptionOfServiceText}
                 </Typography>
 
                 <Typography variant="h5" gutterBottom>
-                    4. User Obligations
+                    {translations.googleApiPolicy}
                 </Typography>
                 <Typography variant="body1" paragraph>
-                    You agree to: - Provide accurate information - Maintain the
-                    security of your account - Not use the service for any
-                    illegal purposes - Not interfere with the service's
-                    operation
+                    {translations.googleApiPolicyText}
                 </Typography>
 
                 <Typography variant="h5" gutterBottom>
-                    5. Limitation of Liability
+                    {translations.userObligations}
                 </Typography>
                 <Typography variant="body1" paragraph>
-                    WhatsPlan is provided "as is" without any warranties. We are
-                    not liable for any damages arising from your use of the
-                    service.
+                    {translations.userObligationsText}
                 </Typography>
 
                 <Typography variant="h5" gutterBottom>
-                    6. Changes to Terms
+                    {translations.limitationOfLiability}
                 </Typography>
                 <Typography variant="body1" paragraph>
-                    We reserve the right to modify these terms at any time. We
-                    will notify users of any material changes.
+                    {translations.limitationOfLiabilityText}
                 </Typography>
 
                 <Typography variant="h5" gutterBottom>
-                    7. Contact Information
+                    {translations.changesToTerms}
                 </Typography>
                 <Typography variant="body1" paragraph>
-                    For questions about these Terms, please contact us at
-                    support@whatsplan.netlify.app
+                    {translations.changesToTermsText}
+                </Typography>
+
+                <Typography variant="h5" gutterBottom>
+                    {translations.contactInformation}
+                </Typography>
+                <Typography variant="body1" paragraph>
+                    {translations.contactInformationText}
                 </Typography>
             </Box>
         </Container>

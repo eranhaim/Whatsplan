@@ -11,28 +11,33 @@ import {
 } from "@mui/material";
 import config from "../config";
 
-const GoogleAuthDialog = ({ open, onClose, user }) => {
+const GoogleAuthDialog = ({ open, onClose, user, forceConsent }) => {
     const [error, setError] = React.useState(null);
 
     const handleAuthorize = async () => {
         try {
             setError(null);
-            const response = await fetch(
-                `${config.API_BASE_URL}/initiateGoogleAuth?userID=${user._id}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "ngrok-skip-browser-warning": "true",
-                    },
-                }
-            );
+            // Build URL with optional forceConsent parameter
+            let authUrl = `${config.API_BASE_URL}/initiateGoogleAuth?userID=${user._id}`;
+
+            // Add forceConsent parameter if needed
+            if (forceConsent) {
+                authUrl += `&forceConsent=true`;
+            }
+
+            const response = await fetch(authUrl, {
+                method: "GET",
+                headers: {
+                    "ngrok-skip-browser-warning": "true",
+                },
+            });
 
             if (!response.ok) {
                 throw new Error("Failed to initiate Google auth");
             }
 
-            const { authUrl } = await response.json();
-            window.location.href = authUrl;
+            const { authUrl: redirectUrl } = await response.json();
+            window.location.href = redirectUrl;
         } catch (error) {
             console.error("Failed to initiate Google auth:", error);
             setError("Failed to connect to Google Calendar. Please try again.");
@@ -57,6 +62,12 @@ const GoogleAuthDialog = ({ open, onClose, user }) => {
                     <li>Help you manage your schedule</li>
                     <li>Provide personalized recommendations</li>
                 </ul>
+                {forceConsent && (
+                    <Alert severity="info" sx={{ mt: 2 }}>
+                        Your previous Google Calendar access has expired. Please
+                        reconnect to continue syncing events.
+                    </Alert>
+                )}
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Not Now</Button>

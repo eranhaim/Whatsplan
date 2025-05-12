@@ -16,8 +16,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import config from "../config";
 import LegalConsentDialogs from "../components/LegalConsentDialogs";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function SignUpPage() {
+    const { translations } = useLanguage();
     const [user, setUser] = useState({
         name: "",
         email: "",
@@ -26,6 +28,7 @@ export default function SignUpPage() {
     });
     const [termsOpen, setTermsOpen] = useState(false);
     const [privacyOpen, setPrivacyOpen] = useState(false);
+    const [combinedOpen, setCombinedOpen] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [privacyAccepted, setPrivacyAccepted] = useState(false);
     const navigate = useNavigate();
@@ -34,9 +37,7 @@ export default function SignUpPage() {
 
     const handleSignUp = async () => {
         if (!termsAccepted || !privacyAccepted) {
-            alert(
-                "Please accept both the Terms of Service and Privacy Policy to continue."
-            );
+            setCombinedOpen(true);
             return;
         }
 
@@ -55,13 +56,13 @@ export default function SignUpPage() {
             } else {
                 alert(
                     data.alreadyExists
-                        ? "User already exists"
-                        : "Sign up failed"
+                        ? translations.userExists
+                        : translations.signupFailed
                 );
             }
         } catch (error) {
             console.error("Sign up failed:", error);
-            alert("Sign up failed. Please try again.");
+            alert(translations.signupFailed);
         }
     };
 
@@ -73,6 +74,43 @@ export default function SignUpPage() {
     const handlePrivacyClick = (e) => {
         e.preventDefault();
         setPrivacyOpen(true);
+    };
+
+    const handleCombinedClose = () => {
+        if (termsAccepted && privacyAccepted) {
+            setCombinedOpen(false);
+            // If both terms are accepted when closing, proceed with signup
+            handleSubmitSignup();
+        } else {
+            setCombinedOpen(false);
+        }
+    };
+
+    // Separated the actual signup submission from the initial check
+    const handleSubmitSignup = async () => {
+        try {
+            const response = await fetch(`${config.API_BASE_URL}/signup`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true",
+                },
+                body: JSON.stringify(user),
+            });
+            const data = await response.json();
+            if (data.success) {
+                navigate("/login");
+            } else {
+                alert(
+                    data.alreadyExists
+                        ? translations.userExists
+                        : translations.signupFailed
+                );
+            }
+        } catch (error) {
+            console.error("Sign up failed:", error);
+            alert(translations.signupFailed);
+        }
     };
 
     return (
@@ -130,7 +168,8 @@ export default function SignUpPage() {
                                 textAlign: "center",
                             }}
                         >
-                            Create your account
+                            {translations.createAccount ||
+                                "Create your account"}
                         </Typography>
                     </Box>
 
@@ -146,7 +185,7 @@ export default function SignUpPage() {
                     >
                         <TextField
                             variant="outlined"
-                            label="Name"
+                            label={translations.name}
                             autoComplete="off"
                             onChange={({ target }) =>
                                 setUser({ ...user, name: target.value })
@@ -164,7 +203,7 @@ export default function SignUpPage() {
                         />
                         <TextField
                             variant="outlined"
-                            label="Email"
+                            label={translations.email}
                             type="email"
                             autoComplete="off"
                             onChange={({ target }) =>
@@ -183,7 +222,7 @@ export default function SignUpPage() {
                         />
                         <TextField
                             variant="outlined"
-                            label="Password"
+                            label={translations.password}
                             type="password"
                             autoComplete="new-password"
                             onChange={({ target }) =>
@@ -225,32 +264,6 @@ export default function SignUpPage() {
                         />
 
                         <Stack spacing={1} sx={{ mt: { xs: 1, sm: 2 } }}>
-                            <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                align="center"
-                                sx={{ fontSize: isMobile ? "12px" : "14px" }}
-                            >
-                                By signing up, you agree to our{" "}
-                                <Link
-                                    component="button"
-                                    variant="body2"
-                                    onClick={handleTermsClick}
-                                    sx={{ fontWeight: "medium" }}
-                                >
-                                    Terms of Service
-                                </Link>{" "}
-                                and{" "}
-                                <Link
-                                    component="button"
-                                    variant="body2"
-                                    onClick={handlePrivacyClick}
-                                    sx={{ fontWeight: "medium" }}
-                                >
-                                    Privacy Policy
-                                </Link>
-                            </Typography>
-
                             <Button
                                 variant="contained"
                                 onClick={handleSignUp}
@@ -267,7 +280,7 @@ export default function SignUpPage() {
                                     mt: { xs: 1, sm: 2 },
                                 }}
                             >
-                                Sign Up
+                                {translations.signUp}
                             </Button>
 
                             <Button
@@ -280,7 +293,8 @@ export default function SignUpPage() {
                                     fontSize: { xs: "14px", sm: "16px" },
                                 }}
                             >
-                                Already have an account? Log in
+                                {translations.alreadyHaveAccount ||
+                                    "Already have an account? Log in"}
                             </Button>
                         </Stack>
                     </Box>
@@ -290,10 +304,12 @@ export default function SignUpPage() {
             <LegalConsentDialogs
                 termsOpen={termsOpen}
                 privacyOpen={privacyOpen}
+                combinedOpen={combinedOpen}
                 termsAccepted={termsAccepted}
                 privacyAccepted={privacyAccepted}
                 handleTermsClose={() => setTermsOpen(false)}
                 handlePrivacyClose={() => setPrivacyOpen(false)}
+                handleCombinedClose={handleCombinedClose}
                 handleTermsAccept={setTermsAccepted}
                 handlePrivacyAccept={setPrivacyAccepted}
             />

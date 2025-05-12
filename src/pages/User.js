@@ -8,6 +8,7 @@ import UserProfile from "../components/UserPage/UserProfile";
 import BotSettings from "../components/UserPage/BotSettings";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import GroupSelector from "../components/UserPage/GroupSelector";
+import GoogleAuthDialog from "../components/googleAuthDialog";
 
 export default function UserPage() {
     const [user, setUser] = useState(null);
@@ -22,6 +23,8 @@ export default function UserPage() {
     const [groups, setGroups] = useState([]);
     const [loadingGroups, setLoadingGroups] = useState(false);
     const [selectedGroups, setSelectedGroups] = useState([]);
+    const [showGoogleAuth, setShowGoogleAuth] = useState(false);
+    const [forceGoogleConsent, setForceGoogleConsent] = useState(false);
 
     const botSettings = [
         {
@@ -45,6 +48,27 @@ export default function UserPage() {
             icon: <Notifications />,
         },
     ];
+
+    // Add a fetch wrapper function that handles Google Calendar API errors
+    const fetchWithGoogleAuthHandling = async (url, options = {}) => {
+        try {
+            const response = await fetch(url, options);
+            const data = await response.json();
+
+            if (data.needsReauth) {
+                // If API reports that reauth is needed
+                setForceGoogleConsent(true);
+                setShowGoogleAuth(true);
+                return { error: "Google authorization expired" };
+            }
+
+            return data;
+        } catch (error) {
+            console.error("API error:", error);
+            showSnackbar("An error occurred", "error");
+            return { error: error.message };
+        }
+    };
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -95,6 +119,11 @@ export default function UserPage() {
                     } else {
                         setIsInSession(true);
                     }
+                }
+
+                // Check for Google Calendar errors in the response
+                if (sessionData.googleCalendarError) {
+                    handleGoogleCalendarError({ needsReauth: true });
                 }
             } catch (error) {
                 console.error("Error fetching user:", error);
@@ -263,27 +292,10 @@ export default function UserPage() {
     const changeSettings = async (id) => {
         // If enabling Google Calendar integration
         if (id === "3" && !user.settingsFlags?.includes(id)) {
-            // Initiate Google Calendar connection
-            try {
-                const response = await fetch(
-                    `${config.API_BASE_URL}/initiateGoogleAuth?userID=${user._id}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "ngrok-skip-browser-warning": "true",
-                        },
-                    }
-                );
-                const data = await response.json();
-                if (data.authUrl) {
-                    window.location.href = data.authUrl;
-                    return; // Don't update settings until auth is complete
-                }
-            } catch (error) {
-                console.error("Error initiating Google auth:", error);
-                showSnackbar("Failed to connect to Google Calendar", "error");
-                return;
-            }
+            // Show the Google Auth dialog instead of directly redirecting
+            setForceGoogleConsent(false);
+            setShowGoogleAuth(true);
+            return;
         }
 
         // For all other settings or when disabling Google Calendar
@@ -358,106 +370,141 @@ export default function UserPage() {
         }
     };
 
+    // Add a handler for Google Calendar API errors
+    const handleGoogleCalendarError = (error) => {
+        if (error?.needsReauth) {
+            setForceGoogleConsent(true);
+            setShowGoogleAuth(true);
+        } else {
+            showSnackbar("An error occurred with Google Calendar", "error");
+        }
+    };
+
     return (
-        <Box
-            sx={{
-                minHeight: "100vh",
-                background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-                p: { xs: 1, sm: 2, md: 3 },
-                boxSizing: "border-box",
-                overflow: "auto",
-            }}
-        >
-            <Container
-                maxWidth="lg"
+        <>
+            {/* Add the GoogleAuthDialog component */}
+            {user && (
+                <GoogleAuthDialog
+                    open={showGoogleAuth}
+                    onClose={() => setShowGoogleAuth(false)}
+                    user={user}
+                    forceConsent={forceGoogleConsent}
+                />
+            )}
+
+            <Box
                 sx={{
-                    width: "100%",
-                    px: { xs: 1, sm: 2 },
+                    minHeight: "100vh",
+                    background:
+                        "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+                    p: { xs: 1, sm: 2, md: 3 },
+                    boxSizing: "border-box",
+                    overflow: "auto",
                 }}
             >
-                <Grid
-                    container
-                    spacing={{ xs: 2, md: 3 }}
+                <Container
+                    maxWidth="lg"
                     sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        flexWrap: "wrap",
-                        justifyContent: "center",
-                        alignItems: "stretch",
-                        gap: { xs: 2, md: 3 },
                         width: "100%",
-                        pb: 2,
+                        px: { xs: 1, sm: 2 },
                     }}
                 >
                     <Grid
-                        item
-                        xs={12}
-                        sm={4}
+                        container
+                        spacing={{ xs: 2, md: 3 }}
                         sx={{
-                            flex: { sm: 1 },
-                            width: "100%",
-                            maxWidth: { xs: "100%", sm: "100%", md: "400px" },
                             display: "flex",
-                            flexDirection: "column",
+                            flexDirection: "row",
+                            flexWrap: "wrap",
+                            justifyContent: "center",
+                            alignItems: "stretch",
+                            gap: { xs: 2, md: 3 },
+                            width: "100%",
+                            pb: 2,
                         }}
                     >
-                        <UserProfile
-                            user={user}
-                            isInSession={isInSession}
-                            qrCode={qrCode}
-                            onGetSummary={getSummery}
-                            onGetDailyUpdate={handleGetDailyUpdate}
-                            onGetMonthlyEvents={handleGetMonthlyEvents}
-                            loadingWeeklyUpdate={loadingWeeklyUpdate}
-                            loadingDailyUpdate={loadingDailyUpdate}
-                            loadingMonthlyEvents={loadingMonthlyEvents}
-                        />
-                    </Grid>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            sx={{
+                                flex: { sm: 1 },
+                                width: "100%",
+                                maxWidth: {
+                                    xs: "100%",
+                                    sm: "100%",
+                                    md: "400px",
+                                },
+                                display: "flex",
+                                flexDirection: "column",
+                            }}
+                        >
+                            <UserProfile
+                                user={user}
+                                isInSession={isInSession}
+                                qrCode={qrCode}
+                                onGetSummary={getSummery}
+                                onGetDailyUpdate={handleGetDailyUpdate}
+                                onGetMonthlyEvents={handleGetMonthlyEvents}
+                                loadingWeeklyUpdate={loadingWeeklyUpdate}
+                                loadingDailyUpdate={loadingDailyUpdate}
+                                loadingMonthlyEvents={loadingMonthlyEvents}
+                            />
+                        </Grid>
 
-                    <Grid
-                        item
-                        xs={12}
-                        sm={4}
-                        sx={{
-                            flex: { sm: 1 },
-                            width: "100%",
-                            maxWidth: { xs: "100%", sm: "100%", md: "400px" },
-                            display: "flex",
-                            flexDirection: "column",
-                        }}
-                    >
-                        <GroupSelector
-                            groups={groups}
-                            loadingGroups={loadingGroups}
-                            selectedGroups={selectedGroups}
-                            setSelectedGroups={setSelectedGroups}
-                            onSave={saveGroupExceptions}
-                            translations={translations}
-                        />
-                    </Grid>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            sx={{
+                                flex: { sm: 1 },
+                                width: "100%",
+                                maxWidth: {
+                                    xs: "100%",
+                                    sm: "100%",
+                                    md: "400px",
+                                },
+                                display: "flex",
+                                flexDirection: "column",
+                            }}
+                        >
+                            <GroupSelector
+                                groups={groups}
+                                loadingGroups={loadingGroups}
+                                selectedGroups={selectedGroups}
+                                setSelectedGroups={setSelectedGroups}
+                                onSave={saveGroupExceptions}
+                                translations={translations}
+                            />
+                        </Grid>
 
-                    <Grid
-                        item
-                        xs={12}
-                        sm={4}
-                        sx={{
-                            flex: { sm: 1 },
-                            width: "100%",
-                            maxWidth: { xs: "100%", sm: "100%", md: "400px" },
-                            display: "flex",
-                            flexDirection: "column",
-                        }}
-                    >
-                        <BotSettings
-                            user={user}
-                            setUser={setUser}
-                            botSettings={botSettings}
-                            onChangeSettings={changeSettings}
-                            onSaveSettings={saveSettings}
-                        />
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            sx={{
+                                flex: { sm: 1 },
+                                width: "100%",
+                                maxWidth: {
+                                    xs: "100%",
+                                    sm: "100%",
+                                    md: "400px",
+                                },
+                                display: "flex",
+                                flexDirection: "column",
+                            }}
+                        >
+                            <BotSettings
+                                user={user}
+                                setUser={setUser}
+                                botSettings={botSettings}
+                                onChangeSettings={changeSettings}
+                                onSaveSettings={saveSettings}
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Container>
-        </Box>
+                </Container>
+            </Box>
+        </>
     );
 }

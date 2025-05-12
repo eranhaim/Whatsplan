@@ -10,21 +10,40 @@ import {
     IconButton,
     AppBar,
     Toolbar,
+    Divider,
+    DialogTitle,
+    DialogActions,
+    Paper,
+    Tab,
+    Tabs,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import PrivacyPolicy from "../pages/PrivacyPolicy";
+import TermsOfService from "../pages/TermsOfService";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const LegalConsentDialogs = ({
     termsOpen,
     privacyOpen,
+    combinedOpen,
     termsAccepted,
     privacyAccepted,
     handleTermsClose,
     handlePrivacyClose,
+    handleCombinedClose,
     handleTermsAccept,
     handlePrivacyAccept,
 }) => {
+    const { translations } = useLanguage();
+    const [activeTab, setActiveTab] = React.useState(0);
+
+    const handleTabChange = (event, newValue) => {
+        setActiveTab(newValue);
+    };
+
     return (
         <>
+            {/* Individual Dialogs */}
             <Dialog open={termsOpen} onClose={handleTermsClose} fullScreen>
                 <AppBar sx={{ position: "relative", bgcolor: "#128C7E" }}>
                     <Toolbar>
@@ -41,7 +60,7 @@ const LegalConsentDialogs = ({
                             variant="h6"
                             component="div"
                         >
-                            Terms of Service
+                            {translations.termsOfService}
                         </Typography>
                         <Button
                             autoFocus
@@ -49,69 +68,13 @@ const LegalConsentDialogs = ({
                             onClick={handleTermsClose}
                             disabled={!termsAccepted}
                         >
-                            Accept
+                            {translations.accept || "Accept"}
                         </Button>
                     </Toolbar>
                 </AppBar>
                 <DialogContent>
-                    <Box sx={{ maxWidth: 800, mx: "auto", py: 4 }}>
-                        <Typography variant="h4" gutterBottom>
-                            Terms of Service
-                        </Typography>
-
-                        <Typography variant="body1" paragraph>
-                            Last updated: {new Date().toLocaleDateString()}
-                        </Typography>
-
-                        <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
-                            1. Acceptance of Terms
-                        </Typography>
-                        <Typography variant="body1" paragraph>
-                            By accessing and using WhatsPlan, you accept and
-                            agree to be bound by the terms and conditions of
-                            this agreement.
-                        </Typography>
-
-                        <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
-                            2. Description of Service
-                        </Typography>
-                        <Typography variant="body1" paragraph>
-                            WhatsPlan is a scheduling automation service that
-                            integrates with Google Calendar and Gmail to help
-                            users manage their appointments and communications
-                            more efficiently.
-                        </Typography>
-
-                        <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
-                            3. Google API Services User Data Policy
-                        </Typography>
-                        <Typography variant="body1" paragraph>
-                            Our application adheres to the Google API Services
-                            User Data Policy, including the Limited Use
-                            requirements. We access, use, and transfer user data
-                            only for the purposes that are permitted by our
-                            users, and we provide a privacy policy and terms of
-                            service that clearly describe how we use the data.
-                        </Typography>
-
-                        <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
-                            4. User Obligations
-                        </Typography>
-                        <Typography variant="body1" paragraph>
-                            You agree to: • Provide accurate information •
-                            Maintain the security of your account • Not use the
-                            service for any illegal purposes • Not interfere
-                            with the service's operation
-                        </Typography>
-
-                        <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
-                            5. Limitation of Liability
-                        </Typography>
-                        <Typography variant="body1" paragraph>
-                            WhatsPlan is provided "as is" without any
-                            warranties. We are not liable for any damages
-                            arising from your use of the service.
-                        </Typography>
+                    <Box sx={{ maxWidth: 800, mx: "auto" }}>
+                        <TermsOfService />
 
                         <Box sx={{ mt: 4 }}>
                             <FormControlLabel
@@ -124,7 +87,10 @@ const LegalConsentDialogs = ({
                                         color="primary"
                                     />
                                 }
-                                label="I have read and agree to the Terms of Service"
+                                label={
+                                    translations.iAgreeToTerms ||
+                                    "I have read and agree to the Terms of Service"
+                                }
                             />
                         </Box>
                     </Box>
@@ -147,7 +113,7 @@ const LegalConsentDialogs = ({
                             variant="h6"
                             component="div"
                         >
-                            Privacy Policy
+                            {translations.privacyPolicy}
                         </Typography>
                         <Button
                             autoFocus
@@ -155,60 +121,13 @@ const LegalConsentDialogs = ({
                             onClick={handlePrivacyClose}
                             disabled={!privacyAccepted}
                         >
-                            Accept
+                            {translations.accept || "Accept"}
                         </Button>
                     </Toolbar>
                 </AppBar>
                 <DialogContent>
-                    <Box sx={{ maxWidth: 800, mx: "auto", py: 4 }}>
-                        <Typography variant="h4" gutterBottom>
-                            Privacy Policy
-                        </Typography>
-
-                        <Typography variant="body1" paragraph>
-                            Last updated: {new Date().toLocaleDateString()}
-                        </Typography>
-
-                        <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
-                            1. Information We Collect
-                        </Typography>
-                        <Typography variant="body1" paragraph>
-                            When you use WhatsPlan, we collect information that
-                            you provide directly to us, including: • Google
-                            Calendar data when you grant access • Email data
-                            when you grant access to Gmail • Account information
-                            necessary for the service
-                        </Typography>
-
-                        <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
-                            2. How We Use Your Information
-                        </Typography>
-                        <Typography variant="body1" paragraph>
-                            We use the information we collect to: • Provide,
-                            maintain, and improve our services • Process and
-                            complete your scheduling requests • Send you
-                            technical notices and support messages • Respond to
-                            your comments and questions
-                        </Typography>
-
-                        <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
-                            3. Data Security
-                        </Typography>
-                        <Typography variant="body1" paragraph>
-                            We implement appropriate security measures to
-                            protect your personal information. However, no
-                            method of transmission over the Internet is 100%
-                            secure.
-                        </Typography>
-
-                        <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
-                            4. Third-Party Services
-                        </Typography>
-                        <Typography variant="body1" paragraph>
-                            We use Google Calendar and Gmail APIs. Your use of
-                            these services is subject to their respective
-                            privacy policies.
-                        </Typography>
+                    <Box sx={{ maxWidth: 800, mx: "auto" }}>
+                        <PrivacyPolicy />
 
                         <Box sx={{ mt: 4 }}>
                             <FormControlLabel
@@ -223,11 +142,183 @@ const LegalConsentDialogs = ({
                                         color="primary"
                                     />
                                 }
-                                label="I have read and agree to the Privacy Policy"
+                                label={
+                                    translations.iAgreeToPrivacy ||
+                                    "I have read and agree to the Privacy Policy"
+                                }
                             />
                         </Box>
                     </Box>
                 </DialogContent>
+            </Dialog>
+
+            {/* Combined Dialog */}
+            <Dialog
+                open={combinedOpen}
+                onClose={handleCombinedClose}
+                maxWidth="md"
+                PaperProps={{
+                    sx: {
+                        width: "35%",
+                        maxHeight: "90vh",
+                        display: "flex",
+                        flexDirection: "column",
+                    },
+                }}
+            >
+                <DialogTitle
+                    sx={{ bgcolor: "#128C7E", color: "white", pb: 1, px: 3 }}
+                >
+                    <Box
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="space-between"
+                    >
+                        <Typography variant="h6">
+                            {translations.legalDocuments || "Legal Documents"}
+                        </Typography>
+                        <IconButton
+                            edge="end"
+                            color="inherit"
+                            onClick={handleCombinedClose}
+                            aria-label="close"
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
+                    <Tabs
+                        value={activeTab}
+                        onChange={handleTabChange}
+                        sx={{
+                            mt: 1,
+                            minHeight: "40px",
+                            "& .MuiTab-root": {
+                                color: "rgba(255,255,255,0.7)",
+                                minHeight: "40px",
+                                "&.Mui-selected": {
+                                    color: "white",
+                                },
+                            },
+                            "& .MuiTabs-indicator": {
+                                backgroundColor: "white",
+                            },
+                        }}
+                    >
+                        <Tab label={translations.termsOfService} />
+                        <Tab label={translations.privacyPolicy} />
+                    </Tabs>
+                </DialogTitle>
+                <DialogContent
+                    sx={{
+                        p: 3,
+                        overflow: "auto",
+                        flex: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                    }}
+                >
+                    {activeTab === 0 ? (
+                        <Box
+                            sx={{
+                                "& h3": { fontSize: "1.5rem" },
+                                "& h5": { fontSize: "1.1rem", mt: 2 },
+                                "& p": { fontSize: "0.9rem" },
+                            }}
+                        >
+                            <TermsOfService />
+                        </Box>
+                    ) : (
+                        <Box
+                            sx={{
+                                "& h3": { fontSize: "1.5rem" },
+                                "& h5": { fontSize: "1.1rem", mt: 2 },
+                                "& p": { fontSize: "0.9rem" },
+                            }}
+                        >
+                            <PrivacyPolicy />
+                        </Box>
+                    )}
+                </DialogContent>
+                <Divider />
+                <DialogActions
+                    sx={{
+                        px: 3,
+                        py: 2,
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                    }}
+                >
+                    <Box
+                        sx={{
+                            width: "100%",
+                            mb: 2,
+                            display: "flex",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <Checkbox
+                            checked={termsAccepted}
+                            onChange={(e) =>
+                                handleTermsAccept(e.target.checked)
+                            }
+                            color="primary"
+                            sx={{ padding: "0", mr: 1, mt: "2px" }}
+                        />
+                        <Typography
+                            variant="body2"
+                            component="label"
+                            onClick={() => handleTermsAccept(!termsAccepted)}
+                        >
+                            {translations.iAgreeToTerms}
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={{
+                            width: "100%",
+                            mb: 2,
+                            display: "flex",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <Checkbox
+                            checked={privacyAccepted}
+                            onChange={(e) =>
+                                handlePrivacyAccept(e.target.checked)
+                            }
+                            color="primary"
+                            sx={{ padding: "0", mr: 1, mt: "2px" }}
+                        />
+                        <Typography
+                            variant="body2"
+                            component="label"
+                            onClick={() =>
+                                handlePrivacyAccept(!privacyAccepted)
+                            }
+                        >
+                            {translations.iAgreeToPrivacy}
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={{
+                            width: "100%",
+                            display: "flex",
+                            justifyContent: "flex-end",
+                        }}
+                    >
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleCombinedClose}
+                            disabled={!termsAccepted || !privacyAccepted}
+                            sx={{
+                                bgcolor: "#128C7E",
+                                "&:hover": { bgcolor: "#0b7a6e" },
+                            }}
+                        >
+                            {translations.accept}
+                        </Button>
+                    </Box>
+                </DialogActions>
             </Dialog>
         </>
     );

@@ -1,4 +1,3 @@
-import React from "react";
 import {
     Box,
     FormControl,
@@ -8,7 +7,6 @@ import {
     Avatar,
     Chip,
     CircularProgress,
-    Button,
     Typography,
     Card,
     CardContent,
@@ -80,7 +78,10 @@ export default function GroupSelector({
                     <Select
                         multiple
                         value={selectedGroups}
-                        onChange={(e) => setSelectedGroups(e.target.value)}
+                        onChange={(e) => {
+                            setSelectedGroups(e.target.value);
+                            onSave();
+                        }}
                         disabled={loadingGroups}
                         displayEmpty
                         placeholder={
@@ -150,11 +151,14 @@ export default function GroupSelector({
                                                     )
                                                 }
                                                 onDelete={() => {
-                                                    setSelectedGroups(
+                                                    const newSelection =
                                                         selectedGroups.filter(
                                                             (id) => id !== value
-                                                        )
+                                                        );
+                                                    setSelectedGroups(
+                                                        newSelection
                                                     );
+                                                    onSave();
                                                 }}
                                             />
                                         );
@@ -208,23 +212,6 @@ export default function GroupSelector({
                         )}
                     </Select>
                 </FormControl>
-                <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-                    <Button
-                        variant="contained"
-                        onClick={onSave}
-                        sx={{
-                            bgcolor: "#128C7E",
-                            color: "white",
-                            borderRadius: "50px",
-                            py: 1.2,
-                            px: 4,
-                            fontWeight: "bold",
-                            "&:hover": { bgcolor: "#00A884" },
-                        }}
-                    >
-                        {translations.saveGroups || "Save Groups"}
-                    </Button>
-                </Box>
             </CardContent>
         </Card>
     );

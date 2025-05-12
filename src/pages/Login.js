@@ -45,14 +45,11 @@ export default function LoginPage() {
                     navigate(`/user/${data.user.phoneNum}`);
                 }
             } else {
-                alert(
-                    translations.auth?.invalidCredentials ||
-                        "Invalid credentials"
-                );
+                alert(translations.invalidCredentials || "Invalid credentials");
             }
         } catch (error) {
             console.error("Login failed:", error);
-            alert(translations.auth?.loginFailed || "Login failed");
+            alert(translations.loginFailed || "Login failed");
         }
     };
 
@@ -65,6 +62,7 @@ export default function LoginPage() {
                     navigate(`/user/${user?.phoneNum}`);
                 }}
                 user={user}
+                forceConsent={false}
             />
             <Box
                 sx={{
@@ -114,6 +112,15 @@ export default function LoginPage() {
                             >
                                 WhatsPlan
                             </Typography>
+                            <Typography
+                                variant="subtitle1"
+                                sx={{
+                                    color: "text.secondary",
+                                    textAlign: "center",
+                                }}
+                            >
+                                {translations.welcomeBack || "Welcome back"}
+                            </Typography>
                         </Box>
 
                         <Box
@@ -150,9 +157,7 @@ export default function LoginPage() {
                             />
                             <TextField
                                 variant="outlined"
-                                placeholder={
-                                    translations.login?.password || "Password"
-                                }
+                                label={translations.password}
                                 type="password"
                                 name="current-password"
                                 onChange={({ target }) =>
@@ -184,7 +189,7 @@ export default function LoginPage() {
                                     mt: { xs: 1, sm: 2 },
                                 }}
                             >
-                                {translations.login?.signIn || "Sign In"}
+                                {translations.signIn}
                             </Button>
                             <Button
                                 variant="text"
@@ -198,7 +203,8 @@ export default function LoginPage() {
                                     py: { xs: 0.5, sm: 1 },
                                 }}
                             >
-                                Don't have an account? Sign up
+                                {translations.dontHaveAccount ||
+                                    "Don't have an account? Sign up"}
                             </Button>
                             <Button
                                 variant="text"
@@ -212,7 +218,8 @@ export default function LoginPage() {
                                     py: { xs: 0.5, sm: 1 },
                                 }}
                             >
-                                Forgot Password?
+                                {translations.forgotPassword ||
+                                    "Forgot Password?"}
                             </Button>
                         </Box>
                     </Paper>
