@@ -7,6 +7,7 @@ const he = {
     error: "שגיאה",
     success: "הצלחה",
     loading: "טוען...",
+    loadingQR: "טוען קוד QR",
     accept: "אישור",
     iAgreeToTerms: "קראתי ואני מסכים לתנאי השימוש",
     iAgreeToPrivacy: "קראתי ואני מסכים למדיניות הפרטיות",

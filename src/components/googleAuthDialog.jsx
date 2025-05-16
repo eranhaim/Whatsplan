@@ -6,7 +6,6 @@ import {
     DialogContent,
     DialogActions,
     Button,
-    Typography,
     Alert,
 } from "@mui/material";
 import config from "../config";
@@ -46,22 +45,13 @@ const GoogleAuthDialog = ({ open, onClose, user, forceConsent }) => {
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Connect Google Calendar</DialogTitle>
+            <DialogTitle>Google Calendar</DialogTitle>
             <DialogContent>
                 {error && (
                     <Alert severity="error" sx={{ mb: 2 }}>
                         {error}
                     </Alert>
                 )}
-                <Typography>
-                    To provide you with the best experience, we need access to
-                    your Google Calendar. This will allow us to:
-                </Typography>
-                <ul>
-                    <li>View your upcoming events</li>
-                    <li>Help you manage your schedule</li>
-                    <li>Provide personalized recommendations</li>
-                </ul>
                 {forceConsent && (
                     <Alert severity="info" sx={{ mt: 2 }}>
                         Your previous Google Calendar access has expired. Please

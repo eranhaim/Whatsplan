@@ -4,22 +4,11 @@ import {
     Box,
     Card,
     CardContent,
-    Button,
     LinearProgress,
 } from "@mui/material";
 import { useLanguage } from "../../contexts/LanguageContext";
 
-export default function UserProfile({
-    user,
-    isInSession,
-    qrCode,
-    onGetSummary,
-    onGetDailyUpdate,
-    onGetMonthlyEvents,
-    loadingWeeklyUpdate,
-    loadingDailyUpdate,
-    loadingMonthlyEvents,
-}) {
+export default function UserProfile({ user, isInSession, qrCode }) {
     const { translations } = useLanguage();
 
     return (
@@ -78,6 +67,16 @@ export default function UserProfile({
                                 maxWidth: 200,
                             }}
                         >
+                            {!qrCode && (
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                    }}
+                                >
+                                    {translations.loadingQR}
+                                </div>
+                            )}
                             {!qrCode && <LinearProgress />}
                             {qrCode && (
                                 <img
@@ -92,108 +91,6 @@ export default function UserProfile({
                             )}
                         </Box>
                     )}
-                </Box>
-
-                <Box
-                    sx={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 2,
-                    }}
-                >
-                    {loadingWeeklyUpdate && (
-                        <LinearProgress
-                            sx={{
-                                "& .MuiLinearProgress-bar": {
-                                    backgroundColor: "#128C7E",
-                                },
-                            }}
-                        />
-                    )}
-                    <Button
-                        variant="contained"
-                        onClick={onGetSummary}
-                        disabled={loadingWeeklyUpdate}
-                        sx={{
-                            bgcolor: "#128C7E",
-                            color: "white",
-                            "&:hover": {
-                                bgcolor: "#00A884",
-                            },
-                            "&:disabled": {
-                                bgcolor: "#cccccc",
-                                color: "#666666",
-                            },
-                            width: "100%",
-                            py: 1.5,
-                            borderRadius: "50px",
-                        }}
-                    >
-                        {translations.getWeeklyUpdate}
-                    </Button>
-
-                    {loadingDailyUpdate && (
-                        <LinearProgress
-                            sx={{
-                                "& .MuiLinearProgress-bar": {
-                                    backgroundColor: "#128C7E",
-                                },
-                            }}
-                        />
-                    )}
-                    <Button
-                        variant="contained"
-                        onClick={onGetDailyUpdate}
-                        disabled={loadingDailyUpdate}
-                        sx={{
-                            bgcolor: "#128C7E",
-                            color: "white",
-                            "&:hover": {
-                                bgcolor: "#00A884",
-                            },
-                            "&:disabled": {
-                                bgcolor: "#cccccc",
-                                color: "#666666",
-                            },
-                            width: "100%",
-                            py: 1.5,
-                            borderRadius: "50px",
-                        }}
-                    >
-                        {translations.getDailyUpdate}
-                    </Button>
-
-                    {loadingMonthlyEvents && (
-                        <LinearProgress
-                            sx={{
-                                "& .MuiLinearProgress-bar": {
-                                    backgroundColor: "#128C7E",
-                                },
-                            }}
-                        />
-                    )}
-                    <Button
-                        variant="contained"
-                        onClick={onGetMonthlyEvents}
-                        disabled={loadingMonthlyEvents}
-                        sx={{
-                            bgcolor: "#128C7E",
-                            color: "white",
-                            "&:hover": {
-                                bgcolor: "#00A884",
-                            },
-                            "&:disabled": {
-                                bgcolor: "#cccccc",
-                                color: "#666666",
-                            },
-                            width: "100%",
-                            py: 1.5,
-                            borderRadius: "50px",
-                        }}
-                    >
-                        {translations.getMonthlyEvents}
-                    </Button>
                 </Box>
             </CardContent>
         </Card>

@@ -13,7 +13,6 @@ import {
     Divider,
     DialogTitle,
     DialogActions,
-    Paper,
     Tab,
     Tabs,
 } from "@mui/material";
