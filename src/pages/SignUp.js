@@ -8,7 +8,6 @@ import {
     Typography,
     Paper,
     Container,
-    Link,
     Stack,
     useMediaQuery,
     useTheme,
@@ -64,16 +63,6 @@ export default function SignUpPage() {
             console.error("Sign up failed:", error);
             alert(translations.signupFailed);
         }
-    };
-
-    const handleTermsClick = (e) => {
-        e.preventDefault();
-        setTermsOpen(true);
-    };
-
-    const handlePrivacyClick = (e) => {
-        e.preventDefault();
-        setPrivacyOpen(true);
     };
 
     const handleCombinedClose = () => {

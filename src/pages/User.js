@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import config from "../config";
 import UserProfile from "../components/UserPage/UserProfile";
-import { useSnackbar } from "../contexts/SnackbarContext";
 import GoogleAuthDialog from "../components/googleAuthDialog";
 
 export default function UserPage() {
@@ -11,7 +10,6 @@ export default function UserPage() {
     const [qrCode, setQrCode] = useState(null);
     const [isInSession, setIsInSession] = useState(false);
     const { phoneNum } = useParams();
-    const { showSnackbar } = useSnackbar();
     const [showGoogleAuth, setShowGoogleAuth] = useState(false);
     const [forceGoogleConsent, setForceGoogleConsent] = useState(false);
 
@@ -68,7 +66,8 @@ export default function UserPage() {
 
                 // Check for Google Calendar errors in the response
                 if (sessionData.googleCalendarError) {
-                    handleGoogleCalendarError({ needsReauth: true });
+                    setForceGoogleConsent(true);
+                    setShowGoogleAuth(true);
                 }
             } catch (error) {
                 console.error("Error fetching user:", error);
@@ -76,7 +75,7 @@ export default function UserPage() {
         };
 
         fetchUser();
-    });
+    }, [phoneNum]);
 
     // Keep localStorage in sync with user state changes
     useEffect(() => {
@@ -99,16 +98,6 @@ export default function UserPage() {
             );
         };
     }, []);
-
-    // Add a handler for Google Calendar API errors
-    const handleGoogleCalendarError = (error) => {
-        if (error?.needsReauth) {
-            setForceGoogleConsent(true);
-            setShowGoogleAuth(true);
-        } else {
-            showSnackbar("An error occurred with Google Calendar", "error");
-        }
-    };
 
     return (
         <>
