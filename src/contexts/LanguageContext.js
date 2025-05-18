@@ -3,6 +3,7 @@ import he from "../locales/he";
 import en from "../locales/en";
 import ru from "../locales/ru";
 import es from "../locales/es";
+import ptBR from "../locales/pt-BR";
 import config from "../config";
 
 const LanguageContext = createContext();
@@ -12,6 +13,7 @@ const translations = {
     en,
     ru,
     es,
+    "pt-BR": ptBR,
 };
 
 export const LanguageProvider = ({ children }) => {
