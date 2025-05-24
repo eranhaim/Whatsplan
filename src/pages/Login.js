@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import {
@@ -190,6 +190,131 @@ export default function LoginPage() {
                                 }}
                             >
                                 {translations.signIn}
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                sx={{
+                                    color: "#4285F4",
+                                    borderColor: "#4285F4",
+                                    textTransform: "none",
+                                    fontWeight: 600,
+                                    mt: 1,
+                                    mb: 1,
+                                }}
+                                onClick={async () => {
+                                    /* global google */
+                                    const clientId =
+                                        process.env.REACT_APP_GOOGLE_CLIENT_ID;
+                                    if (!window.google || !clientId) {
+                                        alert("Google sign-in not available");
+                                        return;
+                                    }
+                                    const tokenClient =
+                                        window.google.accounts.oauth2.initTokenClient(
+                                            {
+                                                client_id: clientId,
+                                                scope: "openid email profile",
+                                                callback: async (response) => {
+                                                    if (
+                                                        response.error ||
+                                                        !response.access_token
+                                                    ) {
+                                                        alert(
+                                                            "Google sign-in failed"
+                                                        );
+                                                        return;
+                                                    }
+                                                    // Exchange access_token for id_token
+                                                    window.google.accounts.id.initialize(
+                                                        {
+                                                            client_id: clientId,
+                                                            callback: async (
+                                                                idResponse
+                                                            ) => {
+                                                                if (
+                                                                    !idResponse.credential
+                                                                ) {
+                                                                    alert(
+                                                                        "Google sign-in failed"
+                                                                    );
+                                                                    return;
+                                                                }
+                                                                // Send id_token to backend
+                                                                try {
+                                                                    const res =
+                                                                        await fetch(
+                                                                            `${config.API_BASE_URL}/auth/google`,
+                                                                            {
+                                                                                method: "POST",
+                                                                                headers:
+                                                                                    {
+                                                                                        "Content-Type":
+                                                                                            "application/json",
+                                                                                        "ngrok-skip-browser-warning":
+                                                                                            "true",
+                                                                                    },
+                                                                                body: JSON.stringify(
+                                                                                    {
+                                                                                        idToken:
+                                                                                            idResponse.credential,
+                                                                                    }
+                                                                                ),
+                                                                            }
+                                                                        );
+                                                                    const data =
+                                                                        await res.json();
+                                                                    if (
+                                                                        data.success
+                                                                    ) {
+                                                                        setUser(
+                                                                            data.user
+                                                                        );
+                                                                        localStorage.setItem(
+                                                                            "user",
+                                                                            JSON.stringify(
+                                                                                data.user
+                                                                            )
+                                                                        );
+                                                                        navigate(
+                                                                            `/user/${
+                                                                                data
+                                                                                    .user
+                                                                                    .phoneNum ||
+                                                                                data
+                                                                                    .user
+                                                                                    ._id
+                                                                            }`
+                                                                        );
+                                                                    } else {
+                                                                        alert(
+                                                                            "Google sign-in failed"
+                                                                        );
+                                                                    }
+                                                                } catch (err) {
+                                                                    alert(
+                                                                        "Google sign-in failed"
+                                                                    );
+                                                                }
+                                                            },
+                                                        }
+                                                    );
+                                                    window.google.accounts.id.prompt();
+                                                },
+                                            }
+                                        );
+                                    tokenClient.requestAccessToken();
+                                }}
+                            >
+                                <img
+                                    src="https://developers.google.com/identity/images/g-logo.png"
+                                    alt="Google"
+                                    style={{
+                                        width: 20,
+                                        marginRight: 8,
+                                        verticalAlign: "middle",
+                                    }}
+                                />
+                                Sign in with Google
                             </Button>
                             <Button
                                 variant="text"

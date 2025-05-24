@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import {
@@ -271,7 +271,121 @@ export default function SignUpPage() {
                             >
                                 {translations.signUp}
                             </Button>
+                            {/* Google Sign-Up Button */}
+                            <Button
+                                variant="outlined"
+                                sx={{
+                                    color: "#4285F4",
+                                    borderColor: "#4285F4",
+                                    textTransform: "none",
+                                    fontWeight: 600,
+                                    mt: 1,
+                                    mb: 1,
+                                }}
+                                onClick={async () => {
+                                    try {
+                                        /* global google */
+                                        const clientId =
+                                            process.env
+                                                .REACT_APP_GOOGLE_CLIENT_ID;
+                                        if (!window.google || !clientId) {
+                                            alert(
+                                                "Google sign-in not available"
+                                            );
+                                            return;
+                                        }
 
+                                        // Initialize Google Identity Services
+                                        window.google.accounts.id.initialize({
+                                            client_id: clientId,
+                                            callback: async (response) => {
+                                                if (!response.credential) {
+                                                    console.error(
+                                                        "No credential received"
+                                                    );
+                                                    return;
+                                                }
+
+                                                try {
+                                                    const res = await fetch(
+                                                        `${config.API_BASE_URL}/auth/google`,
+                                                        {
+                                                            method: "POST",
+                                                            headers: {
+                                                                "Content-Type":
+                                                                    "application/json",
+                                                                "ngrok-skip-browser-warning":
+                                                                    "true",
+                                                            },
+                                                            body: JSON.stringify(
+                                                                {
+                                                                    idToken:
+                                                                        response.credential,
+                                                                }
+                                                            ),
+                                                        }
+                                                    );
+
+                                                    const data =
+                                                        await res.json();
+                                                    if (data.success) {
+                                                        setUser(data.user);
+                                                        localStorage.setItem(
+                                                            "user",
+                                                            JSON.stringify(
+                                                                data.user
+                                                            )
+                                                        );
+                                                        navigate(
+                                                            `/user/${
+                                                                data.user
+                                                                    .phoneNum ||
+                                                                data.user._id
+                                                            }`
+                                                        );
+                                                    } else {
+                                                        alert(
+                                                            "Google sign-in failed: " +
+                                                                (data.error ||
+                                                                    "Unknown error")
+                                                        );
+                                                    }
+                                                } catch (err) {
+                                                    console.error(
+                                                        "API error:",
+                                                        err
+                                                    );
+                                                    alert(
+                                                        "Failed to communicate with server"
+                                                    );
+                                                }
+                                            },
+                                            auto_select: false,
+                                        });
+
+                                        // Prompt for Google sign-in
+                                        window.google.accounts.id.prompt();
+                                    } catch (error) {
+                                        console.error(
+                                            "Google sign-in error:",
+                                            error
+                                        );
+                                        alert("Google sign-in failed");
+                                    }
+                                }}
+                            >
+                                <img
+                                    src="https://developers.google.com/identity/images/g-logo.png"
+                                    alt="Google"
+                                    style={{
+                                        width: 20,
+                                        marginRight: 8,
+                                        verticalAlign: "middle",
+                                    }}
+                                />
+                                Sign up with Google
+                            </Button>
+                            {/* End Google Sign-Up Button */}
                             <Button
                                 variant="text"
                                 onClick={() => navigate("/login")}

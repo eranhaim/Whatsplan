@@ -7,9 +7,41 @@ import {
     LinearProgress,
 } from "@mui/material";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { useState, useEffect } from "react";
 
 export default function UserProfile({ user, isInSession, qrCode }) {
     const { translations } = useLanguage();
+    const [timeLeft, setTimeLeft] = useState(60);
+
+    useEffect(() => {
+        // Reset timer when QR code appears
+        if (qrCode) {
+            setTimeLeft(60);
+        }
+    }, [qrCode]);
+
+    useEffect(() => {
+        // Only run countdown when QR code is displayed
+        if (!qrCode || isInSession || timeLeft <= 0) {
+            // Refresh the window when timer reaches 0 and QR code is still displayed
+            if (qrCode && !isInSession && timeLeft <= 0) {
+                window.location.reload();
+            }
+            return;
+        }
+
+        const timer = setInterval(() => {
+            setTimeLeft((prevTime) => prevTime - 1);
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [qrCode, isInSession, timeLeft]);
+
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+    };
 
     return (
         <Card
@@ -48,6 +80,8 @@ export default function UserProfile({ user, isInSession, qrCode }) {
                         width: "100%",
                         display: "flex",
                         justifyContent: "center",
+                        flexDirection: "column",
+                        alignItems: "center",
                     }}
                 >
                     {isInSession ? (
@@ -65,6 +99,9 @@ export default function UserProfile({ user, isInSession, qrCode }) {
                             sx={{
                                 width: "100%",
                                 maxWidth: 200,
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
                             }}
                         >
                             {!qrCode && (
@@ -79,15 +116,29 @@ export default function UserProfile({ user, isInSession, qrCode }) {
                             )}
                             {!qrCode && <LinearProgress />}
                             {qrCode && (
-                                <img
-                                    src={qrCode}
-                                    alt="QR Code"
-                                    style={{
-                                        width: "100%",
-                                        height: "auto",
-                                        borderRadius: "8px",
-                                    }}
-                                />
+                                <>
+                                    <img
+                                        src={qrCode}
+                                        alt="QR Code"
+                                        style={{
+                                            width: "100%",
+                                            height: "auto",
+                                            borderRadius: "8px",
+                                        }}
+                                    />
+                                    <Typography
+                                        sx={{
+                                            mt: 2,
+                                            fontWeight: "bold",
+                                            color:
+                                                timeLeft <= 10
+                                                    ? "error.main"
+                                                    : "text.primary",
+                                        }}
+                                    >
+                                        {formatTime(timeLeft)}
+                                    </Typography>
+                                </>
                             )}
                         </Box>
                     )}
