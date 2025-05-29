@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import {
@@ -202,7 +202,6 @@ export default function LoginPage() {
                                     mb: 1,
                                 }}
                                 onClick={async () => {
-                                    /* global google */
                                     const clientId =
                                         process.env.REACT_APP_GOOGLE_CLIENT_ID;
                                     if (!window.google || !clientId) {
