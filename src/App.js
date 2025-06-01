@@ -16,6 +16,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const theme = createTheme({
     palette: {
@@ -28,45 +29,53 @@ const theme = createTheme({
 
 function App() {
     return (
-        <LanguageProvider>
-            <SnackbarProvider>
-                <ThemeProvider theme={theme}>
-                    <Router>
-                        <LanguageSwitcher />
-                        <Routes>
-                            <Route path="/" element={<LandingPage />} />
-                            <Route path="/login" element={<LoginPage />} />
-                            <Route path="/signup" element={<SignUpPage />} />
-                            <Route
-                                path="/forgot-password"
-                                element={<ForgotPassword />}
-                            />
-                            <Route
-                                path="/reset-password"
-                                element={<ResetPassword />}
-                            />
-                            <Route
-                                path="/user/:phoneNum"
-                                element={<UserPage />}
-                            />
-                            <Route
-                                path="/auth-success"
-                                element={<AuthSuccess />}
-                            />
-                            <Route path="/auth-error" element={<AuthError />} />
-                            <Route
-                                path="/privacy-policy"
-                                element={<PrivacyPolicy />}
-                            />
-                            <Route
-                                path="/terms-of-service"
-                                element={<TermsOfService />}
-                            />
-                        </Routes>
-                    </Router>
-                </ThemeProvider>
-            </SnackbarProvider>
-        </LanguageProvider>
+        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+            <LanguageProvider>
+                <SnackbarProvider>
+                    <ThemeProvider theme={theme}>
+                        <Router>
+                            <LanguageSwitcher />
+                            <Routes>
+                                <Route path="/" element={<LandingPage />} />
+                                <Route path="/login" element={<LoginPage />} />
+                                <Route
+                                    path="/signup"
+                                    element={<SignUpPage />}
+                                />
+                                <Route
+                                    path="/forgot-password"
+                                    element={<ForgotPassword />}
+                                />
+                                <Route
+                                    path="/reset-password"
+                                    element={<ResetPassword />}
+                                />
+                                <Route
+                                    path="/user/:userId"
+                                    element={<UserPage />}
+                                />
+                                <Route
+                                    path="/auth-success"
+                                    element={<AuthSuccess />}
+                                />
+                                <Route
+                                    path="/auth-error"
+                                    element={<AuthError />}
+                                />
+                                <Route
+                                    path="/privacy-policy"
+                                    element={<PrivacyPolicy />}
+                                />
+                                <Route
+                                    path="/terms-of-service"
+                                    element={<TermsOfService />}
+                                />
+                            </Routes>
+                        </Router>
+                    </ThemeProvider>
+                </SnackbarProvider>
+            </LanguageProvider>
+        </GoogleOAuthProvider>
     );
 }
 

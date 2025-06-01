@@ -37,7 +37,6 @@ export default function ResetPassword() {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "ngrok-skip-browser-warning": "true",
                     },
                     body: JSON.stringify({
                         token,

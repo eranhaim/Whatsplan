@@ -3,52 +3,42 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import config from "../config";
 import UserProfile from "../components/UserPage/UserProfile";
-import GoogleAuthDialog from "../components/googleAuthDialog";
 
 export default function UserPage() {
     const [user, setUser] = useState(null);
     const [qrCode, setQrCode] = useState(null);
     const [isInSession, setIsInSession] = useState(false);
-    const { phoneNum } = useParams();
-    const [showGoogleAuth, setShowGoogleAuth] = useState(false);
-    const [forceGoogleConsent, setForceGoogleConsent] = useState(false);
+    const { userId } = useParams();
 
     useEffect(() => {
         const fetchUser = async () => {
-            if (!phoneNum) {
+            if (!userId) {
                 return;
             }
 
             try {
                 const response = await fetch(
-                    `${config.API_BASE_URL}/getUser/${phoneNum}`,
+                    `${config.API_BASE_URL}/getUser/${userId}`,
                     {
                         method: "GET",
-                        headers: {
-                            "ngrok-skip-browser-warning": "true",
-                        },
                     }
                 );
                 if (!response.ok) {
                     throw new Error("Failed to fetch user data");
                 }
-                const userData = await response.json();
-
-                if (!userData) {
+                const data = await response.json();
+                if (!data.success || !data.user) {
                     throw new Error("User not found");
                 }
 
-                setUser(userData);
+                setUser(data.user);
                 // Update localStorage with latest user data
-                localStorage.setItem("user", JSON.stringify(userData));
+                localStorage.setItem("user", JSON.stringify(data.user));
 
                 const sessionResponse = await fetch(
-                    `${config.API_BASE_URL}/startOrLoadSession/${userData._id}`,
+                    `${config.API_BASE_URL}/startOrLoadSession/${data.user._id}`,
                     {
                         method: "GET",
-                        headers: {
-                            "ngrok-skip-browser-warning": "true",
-                        },
                     }
                 );
                 if (!sessionResponse.ok) {
@@ -63,19 +53,13 @@ export default function UserPage() {
                         setIsInSession(true);
                     }
                 }
-
-                // Check for Google Calendar errors in the response
-                if (sessionData.googleCalendarError) {
-                    setForceGoogleConsent(true);
-                    setShowGoogleAuth(true);
-                }
             } catch (error) {
                 console.error("Error fetching user:", error);
             }
         };
 
         fetchUser();
-    }, [phoneNum]);
+    }, [userId]);
 
     // Keep localStorage in sync with user state changes
     useEffect(() => {
@@ -101,16 +85,6 @@ export default function UserPage() {
 
     return (
         <>
-            {/* Add the GoogleAuthDialog component */}
-            {user && (
-                <GoogleAuthDialog
-                    open={showGoogleAuth}
-                    onClose={() => setShowGoogleAuth(false)}
-                    user={user}
-                    forceConsent={forceGoogleConsent}
-                />
-            )}
-
             <Box
                 sx={{
                     minHeight: "100vh",

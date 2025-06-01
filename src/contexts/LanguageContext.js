@@ -45,7 +45,6 @@ export const LanguageProvider = ({ children }) => {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
-                            "ngrok-skip-browser-warning": "true",
                         },
                         body: JSON.stringify({
                             _id: user._id,
