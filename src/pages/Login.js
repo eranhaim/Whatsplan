@@ -76,6 +76,8 @@ export default function LoginPage() {
                             picture: userInfo.picture,
                             sub: userInfo.sub,
                             access_token: tokenResponse.access_token,
+                            language: userInfo.locale?.split("_")[0] || "he",
+                            userInfo: { locale: userInfo.locale },
                         }),
                     }
                 );
