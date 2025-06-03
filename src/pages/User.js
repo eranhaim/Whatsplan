@@ -1,6 +1,6 @@
 import { Box, Container, Grid } from "@mui/material";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import config from "../config";
 import UserProfile from "../components/UserPage/UserProfile";
 
@@ -8,11 +8,49 @@ export default function UserPage() {
     const [user, setUser] = useState(null);
     const [qrCode, setQrCode] = useState(null);
     const [isInSession, setIsInSession] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const { userId } = useParams();
+    const navigate = useNavigate();
+
+    // Authentication check - runs first
+    useEffect(() => {
+        const checkAuthentication = () => {
+            const storedUser = localStorage.getItem("user");
+
+            if (!storedUser) {
+                // No user data in localStorage, redirect to login
+                navigate("/login");
+                return;
+            }
+
+            try {
+                const userData = JSON.parse(storedUser);
+
+                // Check if the stored user ID matches the URL parameter
+                if (userData._id !== userId) {
+                    // User ID mismatch, redirect to login
+                    navigate("/login");
+                    return;
+                }
+
+                // User is authenticated and matches URL
+                setIsAuthenticated(true);
+                setUser(userData);
+            } catch (error) {
+                // Invalid JSON in localStorage, redirect to login
+                console.error("Invalid user data in localStorage:", error);
+                localStorage.removeItem("user");
+                navigate("/login");
+            }
+        };
+
+        checkAuthentication();
+    }, [userId, navigate]);
 
     useEffect(() => {
         const fetchUser = async () => {
-            if (!userId) {
+            // Only fetch user data if authenticated
+            if (!isAuthenticated || !userId) {
                 return;
             }
 
@@ -55,11 +93,14 @@ export default function UserPage() {
                 }
             } catch (error) {
                 console.error("Error fetching user:", error);
+                // If there's an error fetching user data, it might mean the user is no longer valid
+                // Redirect to login
+                navigate("/login");
             }
         };
 
         fetchUser();
-    }, [userId]);
+    }, [userId, isAuthenticated, navigate]);
 
     // Keep localStorage in sync with user state changes
     useEffect(() => {
@@ -82,6 +123,11 @@ export default function UserPage() {
             );
         };
     }, []);
+
+    // Don't render anything until authentication is verified
+    if (!isAuthenticated) {
+        return null;
+    }
 
     return (
         <>

@@ -164,7 +164,7 @@ export default function LoginPage() {
                         sx={{
                             display: "flex",
                             flexDirection: "column",
-                            gap: { xs: 2, sm: 3 },
+                            gap: { xs: 1.5, sm: 2 },
                             width: "100%",
                         }}
                     >
@@ -210,6 +210,64 @@ export default function LoginPage() {
                                 },
                             }}
                         />
+
+                        {/* Privacy Policy and Terms of Service Links */}
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                gap: 2,
+                                mt: 0.5,
+                                mb: 0.5,
+                            }}
+                        >
+                            <Button
+                                variant="text"
+                                onClick={() =>
+                                    window.open(
+                                        "/privacy-policy",
+                                        "_blank",
+                                        "noopener,noreferrer"
+                                    )
+                                }
+                                sx={{
+                                    color: "#666",
+                                    textTransform: "none",
+                                    fontSize: "0.875rem",
+                                    "&:hover": {
+                                        bgcolor: "rgba(0, 0, 0, 0.04)",
+                                    },
+                                }}
+                            >
+                                Privacy Policy
+                            </Button>
+                            <Typography
+                                sx={{ color: "#666", alignSelf: "center" }}
+                            >
+                                |
+                            </Typography>
+                            <Button
+                                variant="text"
+                                onClick={() =>
+                                    window.open(
+                                        "/terms-of-service",
+                                        "_blank",
+                                        "noopener,noreferrer"
+                                    )
+                                }
+                                sx={{
+                                    color: "#666",
+                                    textTransform: "none",
+                                    fontSize: "0.875rem",
+                                    "&:hover": {
+                                        bgcolor: "rgba(0, 0, 0, 0.04)",
+                                    },
+                                }}
+                            >
+                                Terms of Service
+                            </Button>
+                        </Box>
+
                         <Button
                             variant="contained"
                             onClick={() => handleLogin(user)}
@@ -222,11 +280,11 @@ export default function LoginPage() {
                                 fontSize: { xs: "1rem", sm: "1.1rem" },
                                 borderRadius: "50px",
                                 textTransform: "none",
-                                mt: { xs: 1, sm: 2 },
                             }}
                         >
                             {translations.signIn}
                         </Button>
+
                         <Button
                             variant="outlined"
                             onClick={() => googleLogin()}
@@ -235,8 +293,6 @@ export default function LoginPage() {
                                 borderColor: "#4285F4",
                                 textTransform: "none",
                                 fontWeight: 600,
-                                mt: 1,
-                                mb: 1,
                             }}
                         >
                             <img
@@ -250,35 +306,46 @@ export default function LoginPage() {
                             />
                             Sign in with Google
                         </Button>
-                        <Button
-                            variant="text"
-                            onClick={() => navigate("/signup")}
+
+                        {/* Signup and Forgot Password buttons with reduced spacing */}
+                        <Box
                             sx={{
-                                color: "#128C7E",
-                                "&:hover": {
-                                    bgcolor: "rgba(18, 140, 126, 0.04)",
-                                },
-                                textTransform: "none",
-                                py: { xs: 0.5, sm: 1 },
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 0.5,
                             }}
                         >
-                            {translations.dontHaveAccount ||
-                                "Don't have an account? Sign up"}
-                        </Button>
-                        <Button
-                            variant="text"
-                            onClick={() => navigate("/forgot-password")}
-                            sx={{
-                                color: "#128C7E",
-                                "&:hover": {
-                                    bgcolor: "rgba(18, 140, 126, 0.04)",
-                                },
-                                textTransform: "none",
-                                py: { xs: 0.5, sm: 1 },
-                            }}
-                        >
-                            {translations.forgotPassword || "Forgot Password?"}
-                        </Button>
+                            <Button
+                                variant="text"
+                                onClick={() => navigate("/signup")}
+                                sx={{
+                                    color: "#128C7E",
+                                    "&:hover": {
+                                        bgcolor: "rgba(18, 140, 126, 0.04)",
+                                    },
+                                    textTransform: "none",
+                                    py: { xs: 0.5, sm: 1 },
+                                }}
+                            >
+                                {translations.dontHaveAccount ||
+                                    "Don't have an account? Sign up"}
+                            </Button>
+                            <Button
+                                variant="text"
+                                onClick={() => navigate("/forgot-password")}
+                                sx={{
+                                    color: "#128C7E",
+                                    "&:hover": {
+                                        bgcolor: "rgba(18, 140, 126, 0.04)",
+                                    },
+                                    textTransform: "none",
+                                    py: { xs: 0.5, sm: 1 },
+                                }}
+                            >
+                                {translations.forgotPassword ||
+                                    "Forgot Password?"}
+                            </Button>
+                        </Box>
                     </Box>
                 </Paper>
             </Container>
