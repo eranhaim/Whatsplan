@@ -117,6 +117,19 @@ export default function UserProfile({ user, isInSession, qrCode }) {
                             {!qrCode && <LinearProgress />}
                             {qrCode && (
                                 <>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            fontWeight: "bold",
+                                            color: "#128C7E",
+                                            wordBreak: "break-word",
+                                            textAlign: "center",
+                                        }}
+                                    >
+                                        {
+                                            "פתח וואטצפ > הגדרות > מכשירים מקושרים > הוסף מכשיר"
+                                        }
+                                    </Typography>
                                     <img
                                         src={qrCode}
                                         alt="QR Code"
