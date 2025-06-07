@@ -15,6 +15,8 @@ import {
     DialogActions,
     Tab,
     Tabs,
+    useMediaQuery,
+    useTheme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import PrivacyPolicy from "../pages/PrivacyPolicy";
@@ -35,6 +37,8 @@ const LegalConsentDialogs = ({
 }) => {
     const { translations } = useLanguage();
     const [activeTab, setActiveTab] = React.useState(0);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     const handleTabChange = (event, newValue) => {
         setActiveTab(newValue);
@@ -156,10 +160,11 @@ const LegalConsentDialogs = ({
                 open={combinedOpen}
                 onClose={handleCombinedClose}
                 maxWidth="md"
+                fullScreen={isMobile}
                 PaperProps={{
                     sx: {
-                        width: "35%",
-                        maxHeight: "90vh",
+                        width: isMobile ? "100%" : "35%",
+                        maxHeight: isMobile ? "100vh" : "90vh",
                         display: "flex",
                         flexDirection: "column",
                     },
@@ -278,6 +283,7 @@ const LegalConsentDialogs = ({
                             display: "flex",
                             alignItems: "flex-start",
                         }}
+                        style={{ marginLeft: 0 }}
                     >
                         <Checkbox
                             checked={privacyAccepted}
