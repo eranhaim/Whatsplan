@@ -48,21 +48,12 @@ export default function LoginPage() {
     };
 
     const googleLogin = useGoogleLogin({
+        flow: "auth-code",
         scope: "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events",
-        onSuccess: async (tokenResponse) => {
+        onSuccess: async (codeResponse) => {
             try {
-                // Get user info from Google
-                const userInfoResponse = await fetch(
-                    "https://www.googleapis.com/oauth2/v3/userinfo",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${tokenResponse.access_token}`,
-                        },
-                    }
-                );
-                const userInfo = await userInfoResponse.json();
+                console.log("🔐 Google auth code response:", codeResponse);
 
-                // Send to our backend
                 const response = await fetch(
                     `${config.API_BASE_URL}/auth/google`,
                     {
@@ -71,13 +62,8 @@ export default function LoginPage() {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                            email: userInfo.email,
-                            name: userInfo.name,
-                            picture: userInfo.picture,
-                            sub: userInfo.sub,
-                            access_token: tokenResponse.access_token,
-                            language: userInfo.locale?.split("_")[0] || "he",
-                            userInfo: { locale: userInfo.locale },
+                            code: codeResponse.code,
+                            flow: "auth-code",
                         }),
                     }
                 );
@@ -95,7 +81,8 @@ export default function LoginPage() {
                 alert("Google sign-in failed");
             }
         },
-        onError: () => {
+        onError: (error) => {
+            console.error("Google login error:", error);
             alert("Google sign-in failed");
         },
     });
