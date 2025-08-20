@@ -106,6 +106,56 @@ export default function LandingPage() {
                     </Box>
                 </Box>
             </Container>
+
+            {/* Footer Links */}
+            <Box
+                sx={{
+                    position: "absolute",
+                    bottom: 20,
+                    right: 20,
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 2,
+                    zIndex: 1,
+                }}
+            >
+                <Button
+                    href="/privacy-policy"
+                    sx={{
+                        color: "rgba(255,255,255,0.8)",
+                        textDecoration: "underline",
+                        fontSize: "0.875rem",
+                        minWidth: "auto",
+                        padding: 0,
+                        textTransform: "none",
+                        "&:hover": {
+                            color: "white",
+                            backgroundColor: "transparent",
+                            textDecoration: "underline",
+                        },
+                    }}
+                >
+                    {translations.privacyPolicy || "privacy policy"}
+                </Button>
+                <Button
+                    href="/terms-of-service"
+                    sx={{
+                        color: "rgba(255,255,255,0.8)",
+                        textDecoration: "underline",
+                        fontSize: "0.875rem",
+                        minWidth: "auto",
+                        padding: 0,
+                        textTransform: "none",
+                        "&:hover": {
+                            color: "white",
+                            backgroundColor: "transparent",
+                            textDecoration: "underline",
+                        },
+                    }}
+                >
+                    {translations.termsOfService || "terms of service"}
+                </Button>
+            </Box>
         </Box>
     );
 }
